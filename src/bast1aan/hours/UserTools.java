@@ -21,6 +21,13 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 /**
  * Useful tools related to @see User
@@ -47,6 +54,44 @@ public class UserTools {
 		byte[] digestB = m.digest();
 		String digest = new BigInteger(1, digestB).toString(16);
 		return digest.equals(user.password);
+	}
+	
+	/**
+	 * Send code mail for user so it can activate its account.
+	 * 
+	 * @param user
+	 * @param hostname hostname including protocol, for example "http://localhost"
+	 */
+	public static void sendCodeMail(User user, String hostname) {
+		final String subject = "Reset user request";
+		final String message = "Dear user,\n"
+				+ "User %s has requested to reset your password.\n"
+				+ "Follow the next link:\n"
+				+ "%s/hours/userreset.action";
+		Settings settings = Settings.getInstance();
+		if (user.email == null || user.email.length() == 0) {
+			return;
+		}
+		Properties properties = new Properties();
+		properties.setProperty("mail.smtp.host", "localhost");
+		
+		Session session = Session.getDefaultInstance(properties);
+		
+		try {
+			MimeMessage msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress("admin@welmers.net"));
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(user.email));
+			msg.setSubject(subject);
+			msg.setText(String.format(
+				message,
+				user.username,
+				hostname
+			));
+			Transport.send(msg);
+		} catch (MessagingException ex) {
+			throw new HoursException("Error sending mail", ex);
+		}
+	
 	}
 
 }

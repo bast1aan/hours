@@ -49,6 +49,23 @@ public class Dao {
 		}
 		return user;
 	}
+
+	public User findUserByEmail(String email) {
+		User user = null;
+		String query = "SELECT * FROM users WHERE email = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setString(1, email);
+			ResultSet result = stmt.executeQuery();
+			if (result.next()) {
+				user = new User();
+				populateUser(user, result);
+			}
+		} catch (SQLException e) {
+			throw new HoursException(String.format("Error executing query: %s", query), e);
+		}
+		return user;
+	}
 	
 	private void populateUser(User user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
