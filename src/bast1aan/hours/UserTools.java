@@ -68,7 +68,7 @@ public class UserTools {
 		final String message = "Dear user,\n"
 				+ "User %s has requested to reset your password.\n"
 				+ "Follow the next link:\n"
-				+ "%s/hours/userreset.action";
+				+ "%s/hours/confirm.action";
 		Settings settings = Settings.getInstance();
 		if (user.email == null || user.email.length() == 0) {
 			return;

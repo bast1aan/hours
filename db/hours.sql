@@ -38,3 +38,11 @@ ALTER TABLE hours
 CREATE INDEX fki_hours_projects
 	ON hours(project_id);
 
+CREATE TABLE users_newpassword
+(
+	username character varying(255), 
+	salt character(32), 
+	confirmcode character(32), 
+	CONSTRAINT users_newpassword_pk PRIMARY KEY (confirmcode), 
+	CONSTRAINT users_newpassword_users FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
+);

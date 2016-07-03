@@ -39,5 +39,9 @@
 			<result name="success">/WEB-INF/jsp/newcode_send.jsp</result>
 			<result name="error">/newcode.jsp</result>
 		</action>
+		<action name="confirm" class="bast1aan.hours.action.ConfirmAction" method="execute">
+			<result name="success">/WEB-INF/jsp/confirm.jsp</result>
+			<result name="error">/WEB-INF/jsp/confirm_failed.jsp</result>
+		</action>
 	</package>
 </struts>

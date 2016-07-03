@@ -66,6 +66,23 @@ public class Dao {
 		}
 		return user;
 	}
+
+	public User findUserByCode(String code) {
+		User user = null;
+		String query = "SELECT u.* FROM users_newpassword un LEFT JOIN users u ON un.username = u.username WHERE un.confirmcode = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setString(1, code);
+			ResultSet result = stmt.executeQuery();
+			if (result.next()) {
+				user = new User();
+				populateUser(user, result);
+			}
+		} catch (SQLException e) {
+			throw new HoursException(String.format("Error executing query: %s", query), e);
+		}
+		return user;
+	}
 	
 	private void populateUser(User user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
