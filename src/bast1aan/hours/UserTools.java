@@ -28,6 +28,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.lang.reflect.Field;
 
 /**
  * Useful tools related to @see User
@@ -92,6 +93,22 @@ public class UserTools {
 			throw new HoursException("Error sending mail", ex);
 		}
 	
+	}
+	public static User userWithoutPrivateData(User user) {
+		User newUser = new User();
+		for (Field field : User.class.getFields()) {
+			String name = field.getName();
+			if (name.equals("password") || name.equals("salt"))
+				continue;
+			try {
+				field.set(newUser, field.get(user));
+			} catch (IllegalArgumentException ex) {
+				throw new HoursException("Illegal Argument", ex);
+			} catch (IllegalAccessException ex) {
+				throw new HoursException("Illegal Access", ex);
+			}
+		}
+		return newUser;
 	}
 
 }
