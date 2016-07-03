@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ Hours
+ Copyright (C) 2016 Bastiaan Welmers, bastiaan@welmers.net
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as
+ published by the Free Software Foundation.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ version 2 along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+-->
+<project name="hours" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<path id="project.class.path">
+		<fileset dir="lib/" erroronmissingdir="false">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="dependencies/lib/" erroronmissingdir="false">
+			<include name="**/*.jar"/>
+		</fileset>
+		<pathelement path="${java.class.path}" />
+	</path>
+	
+	<property name="warfile" value="hours"/>
+	
+	<target name="init">
+		<mkdir dir="antbuild/classes" />
+		<mkdir dir="antbuild/lib" />
+		<mkdir dir="antbuild/web" />
+		<mkdir dir="antbuild/web/js" />
+	</target>
+	
+	<target name="unpack">
+		<unwar src="${warfile}.war" dest="war" />
+	</target>
+	
+	<target name="clean">
+		<delete dir="antbuild" />
+		<delete file="${warfile}.war" />
+	</target>
+    
+	<target name="resolve" description="retrieve dependencies with ivy" depends="clean-resolve">
+		<ivy:retrieve conf="binaries" pattern="dependencies/lib/[artifact]-[revision](-[classifier]).[ext]"/>
+		<ivy:retrieve conf="sources" pattern="dependencies/libsrc/[artifact]-[revision](-[classifier]).[ext]"/>	
+        </target>
+
+	<target name="clean-resolve">
+		<delete dir="dependencies" />
+	</target>
+			
+	<target name="compile" depends="init">
+		<javac srcdir="src" destdir="antbuild/classes" source="1.6" target="1.6">
+			<classpath refid="project.class.path" />
+		</javac>
+	</target>
+	
+	<target name="build" depends="compile">
+		
+		<copy todir="antbuild/classes">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
+		
+		<copy todir="antbuild/lib" flatten="true">
+			<fileset dir="lib" erroronmissingdir="false" />
+			<fileset dir="dependencies/lib" erroronmissingdir="false" />
+		</copy>
+
+		<copy todir="antbuild/web">
+			<fileset dir="web" />
+			<fileset dir="dependencies/web" erroronmissingdir="false" />
+		</copy>
+						
+		<war destfile="${warfile}.war" webxml="web.xml" update="true">
+			<classes dir="antbuild/classes"/>
+			<lib dir="antbuild/lib" />
+			<fileset dir="antbuild/web">
+			</fileset>
+		</war>
+		
+	</target>
+	
+</project>
