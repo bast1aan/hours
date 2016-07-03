@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+
+ Commenter
+ Copyright (C) 2014 Bastiaan Welmers, bastiaan@welmers.net
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as
+ published by the Free Software Foundation.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ version 2 along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+-->
+   
+<struts>
+ 
+	<constant name="struts.devMode" value="true" />
+ 
+	<package name="hours" extends="struts-default">
+		<action name="index">
+				<result>/WEB-INF/jsp/index.jsp</result>
+		</action>
+		<action name="login" class="bast1aan.hours.action.LoginAction" method="execute">
+			<result name="success">/WEB-INF/jsp/login_success.jsp</result>
+			<result name="error">/login.jsp</result>
+		</action>
+	</package>
+</struts>

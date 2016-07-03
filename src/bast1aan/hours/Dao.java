@@ -17,6 +17,10 @@
  */
 package bast1aan.hours;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Dao {
 	private static Dao instance;
 
@@ -27,6 +31,31 @@ public class Dao {
 		return instance;
 	}
 	
-	private ConnectionManager cm = new ConnectionManager();
+	private final ConnectionManager cm = new ConnectionManager();
+
+	public User findUser(String username) {
+		User user = null;
+		String query = "SELECT * FROM users WHERE username = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setString(1, username);
+			ResultSet result = stmt.executeQuery();
+			if (result.next()) {
+				user = new User();
+				populateUser(user, result);
+			}
+		} catch (SQLException e) {
+			throw new HoursException(String.format("Error executing query: %s", query), e);
+		}
+		return user;
+	}
+	
+	private void populateUser(User user, ResultSet result) throws SQLException {
+		user.username = result.getString("username");
+		user.password = result.getString("password");
+		user.email = result.getString("email");
+		user.fullname = result.getString("fullname");
+		user.salt = result.getString("salt");	
+	}
 	
 }
