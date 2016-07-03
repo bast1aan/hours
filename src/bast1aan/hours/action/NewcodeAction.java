@@ -44,12 +44,16 @@ public class NewcodeAction extends ActionSupport implements ServletRequestAware 
 				user = dao.findUserByEmail(usernameoremail);
 			
 			if (user != null) {
-				UserTools.sendCodeMail(user, 
+				String code = UserTools.generateNewCode();
+				dao.insertNewCode(user, code);
+				UserTools.sendCodeMail(
+						user, 
 						String.format("%s://%s", 
 								request.isSecure() ? "https" : "http", 
 								request.getServerName()
-							)
-						);	
+							),
+						code
+					);	
 		}
 			return SUCCESS;
 		}

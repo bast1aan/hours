@@ -17,6 +17,7 @@
  */
 package bast1aan.hours;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,6 +83,46 @@ public class Dao {
 			throw new HoursException(String.format("Error executing query: %s", query), e);
 		}
 		return user;
+	}
+	
+	/**
+	 * Inserts new confirmation code for user.
+	 * Removes the old one if exists
+	 * 
+	 * @param user
+	 * @param code 
+	 */
+	public void insertNewCode(User user, String code) {
+		
+		final String queryDelete = "DELETE FROM users_newpassword WHERE username = ?";
+		final String query = "INSERT INTO users_newpassword (username, confirmcode) VALUES (?, ?)";
+		
+		final Connection connection = cm.getConnection();
+
+		try {
+			connection.setAutoCommit(false);
+
+			try {
+				PreparedStatement stmtDelete = connection.prepareStatement(queryDelete);
+				stmtDelete.setString(1, user.username);
+				stmtDelete.executeUpdate();
+
+				PreparedStatement stmt = connection.prepareStatement(query);
+				stmt.setString(1, user.username);
+				stmt.setString(2, code);
+				stmt.executeUpdate();
+
+				connection.commit();
+
+			} catch (SQLException e) {
+				connection.rollback();
+				throw new HoursException("Error executing query", e);
+			} finally {
+				connection.setAutoCommit(true);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error while executing transaction in JDBC", e);
+		}
 	}
 	
 	private void populateUser(User user, ResultSet result) throws SQLException {

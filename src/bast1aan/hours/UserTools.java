@@ -29,6 +29,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.lang.reflect.Field;
+import java.util.Random;
 
 /**
  * Useful tools related to @see User
@@ -62,13 +63,14 @@ public class UserTools {
 	 * 
 	 * @param user
 	 * @param hostname hostname including protocol, for example "http://localhost"
+	 * @param code unique confirmation code
 	 */
-	public static void sendCodeMail(User user, String hostname) {
+	public static void sendCodeMail(User user, String hostname, String code) {
 		final String subject = "Reset user request";
-		final String message = "Dear user,\n"
-				+ "User %s has requested to reset your password.\n"
-				+ "Follow the next link:\n"
-				+ "%s/hours/confirm.action";
+		final String message = "Dear user,\n\n"
+				+ "User %s has requested to reset your password.\n\n"
+				+ "Follow the next link:\n\n"
+				+ "%s/hours/confirm.action?code=%s\n\n";
 		Settings settings = Settings.getInstance();
 		if (user.email == null || user.email.length() == 0) {
 			return;
@@ -86,7 +88,8 @@ public class UserTools {
 			msg.setText(String.format(
 				message,
 				user.username,
-				hostname
+				hostname,
+				code
 			));
 			Transport.send(msg);
 		} catch (MessagingException ex) {
@@ -110,5 +113,33 @@ public class UserTools {
 		}
 		return newUser;
 	}
-
+	
+	/**
+	 * generate random 32 character hex code string
+	 * 
+	 * @return 32 char String with random code 
+	 */
+	public static String generateNewCode() {
+	
+		// TODO can this code simpler? Is it random enough?
+		
+		// generate two random 64bit longs, 
+		Random rnd = new Random();
+		long val = rnd.nextLong();
+		long val2 = rnd.nextLong();
+		
+		// turn the two random longs into a 128 bit / 16 byte array
+		byte[] codeB = new byte[16];
+		for (int i = 7; i >= 0; --i) {
+			codeB[i] = (byte)(val & 0xff);
+			val >>= 8;
+		}
+		for (int i = 15; i >= 8; --i) {
+			codeB[i] = (byte)(val2 & 0xff);
+			val2 >>= 8;
+		}
+		// return 16 byte array as 32 char hex notation
+		return new BigInteger(1, codeB).toString(16);
+		
+	}
 }
