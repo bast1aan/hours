@@ -18,9 +18,12 @@
 
 package bast1aan.hours;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Project {
-	public Integer id;
-	public String name;
-	public String username;
-	public User user;
+	@Getter @Setter public Integer id;
+	@Getter @Setter public String name;
+	@Getter @Setter public String username;
+	@Getter @Setter public User user;
 }

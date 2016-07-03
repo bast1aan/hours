@@ -18,10 +18,13 @@
 
 package bast1aan.hours;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class User {
-	public String username;
-	public String password;
-	public String salt;
-	public String fullname;
-	public String email;    
+	@Getter @Setter public String username;
+	@Getter @Setter public String password;
+	@Getter @Setter public String salt;
+	@Getter @Setter public String fullname;
+	@Getter @Setter public String email;    
 }
