@@ -94,7 +94,6 @@ public class Dao {
 	 */
 	public void insertNewCode(User user, String code) {
 		
-		final String queryDelete = "DELETE FROM users_newpassword WHERE username = ?";
 		final String query = "INSERT INTO users_newpassword (username, confirmcode) VALUES (?, ?)";
 		
 		final Connection connection = cm.getConnection();
@@ -103,10 +102,7 @@ public class Dao {
 			connection.setAutoCommit(false);
 
 			try {
-				PreparedStatement stmtDelete = connection.prepareStatement(queryDelete);
-				stmtDelete.setString(1, user.username);
-				stmtDelete.executeUpdate();
-
+				deleteCode(user.username, connection);
 				PreparedStatement stmt = connection.prepareStatement(query);
 				stmt.setString(1, user.username);
 				stmt.setString(2, code);
@@ -125,6 +121,48 @@ public class Dao {
 		}
 	}
 	
+	/**
+	 * Update the user to the database.
+	 * Removes confirmation codes as well, if any
+	 * 
+	 * @param user 
+	 */
+	public void update(User user) {
+		final String query = "UPDATE users SET password = ?, email = ?, fullname = ?, salt = ? WHERE username = ?";
+
+		final Connection connection = cm.getConnection();
+
+		try {
+			connection.setAutoCommit(false);
+
+			try {
+				deleteCode(user.username, connection);
+				
+				PreparedStatement stmt = connection.prepareStatement(query);
+				
+				stmt.setString(1, user.password);
+				stmt.setString(2, user.email);
+				stmt.setString(3, user.fullname);
+				stmt.setString(4, user.salt);
+				
+				stmt.setString(5, user.username); // primary key
+				
+				stmt.executeUpdate();
+
+				connection.commit();
+
+			} catch (SQLException e) {
+				connection.rollback();
+				throw new HoursException("Error executing query", e);
+			} finally {
+				connection.setAutoCommit(true);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error while executing transaction in JDBC", e);
+		}
+		
+	}
+	
 	private void populateUser(User user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
 		user.password = result.getString("password");
@@ -132,5 +170,12 @@ public class Dao {
 		user.fullname = result.getString("fullname");
 		user.salt = result.getString("salt");	
 	}
-	
+
+	private void deleteCode(String username, Connection connection) throws SQLException {
+		final String queryDelete = "DELETE FROM users_newpassword WHERE username = ?";
+		PreparedStatement stmtDelete = connection.prepareStatement(queryDelete);
+		stmtDelete.setString(1, username);
+		stmtDelete.executeUpdate();
+	}
+
 }

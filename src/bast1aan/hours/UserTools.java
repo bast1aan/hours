@@ -43,19 +43,40 @@ public class UserTools {
 	// Charset used for communication
 	private static final Charset CHARSET = Charset.forName("UTF-8");
 	
+	/**
+	 * Check if login password is valid for this user.
+	 * 
+	 * @param user
+	 * @param password
+	 * @return valid or not
+	 */
 	public static boolean login(User user, String password) {
-		
+		return plainPwdToHash(user.salt, password).equals(user.password);
+	}
+	
+	/**
+	 * Set new password on User object.
+	 * Resets the salt as well.
+	 * 
+	 * @param user
+	 * @param plainPassword 
+	 */
+	public static void newPassword(User user, String plainPassword) {
+		user.salt = generateNewCode();
+		user.password = plainPwdToHash(user.salt, plainPassword);
+	}
+	
+	private static String plainPwdToHash(String salt, String plainPassword) {
 		MessageDigest m;
 		try {
 			m = MessageDigest.getInstance(ALGO);
 		} catch (NoSuchAlgorithmException e) {
 			throw new HoursException(String.format("Unknown MessageDigest algorithm: %s", ALGO), e);
 		}
-		String s = String.format("%s%s%s", SALT, user.salt, password);
+		String s = String.format("%s%s%s", SALT, salt, plainPassword);
 		m.update(s.getBytes(CHARSET));
 		byte[] digestB = m.digest();
-		String digest = new BigInteger(1, digestB).toString(16);
-		return digest.equals(user.password);
+		return new BigInteger(1, digestB).toString(16);
 	}
 	
 	/**

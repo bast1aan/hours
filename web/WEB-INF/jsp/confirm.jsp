@@ -10,7 +10,7 @@
 <h1>Confirm</h1>
 <p>${result}</p>
 <p>Enter a new password to continue:</p>
-<s:form action="reset">
+<s:form action="userreset">
 	<s:password name="password" label="New password:" />
 	<s:password name="passwordconfirm" label="Confirm new password:" />
 	<s:submit value="submit" />

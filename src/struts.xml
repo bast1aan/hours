@@ -43,5 +43,9 @@
 			<result name="success">/WEB-INF/jsp/confirm.jsp</result>
 			<result name="error">/WEB-INF/jsp/confirm_failed.jsp</result>
 		</action>
+		<action name="userreset" class="bast1aan.hours.action.UserresetAction" method="execute">
+			<result name="success">/WEB-INF/jsp/userreset.jsp</result>
+			<result name="error">/WEB-INF/jsp/confirm.jsp</result>
+		</action>
 	</package>
 </struts>
