@@ -48,13 +48,10 @@ public class NewcodeAction extends ActionSupport implements ServletRequestAware 
 				dao.insertNewCode(user, code);
 				UserTools.sendCodeMail(
 						user, 
-						String.format("%s://%s", 
-								request.isSecure() ? "https" : "http", 
-								request.getServerName()
-							),
+						getHost(),
 						code
 					);	
-		}
+			} // if user not found, do not provide information
 			return SUCCESS;
 		}
 		result = "No username or email given";
@@ -64,6 +61,20 @@ public class NewcodeAction extends ActionSupport implements ServletRequestAware 
 	@Override
 	public void setServletRequest(HttpServletRequest hsr) {
 		this.request = hsr;
+	}
+	
+	private String getHost() {
+		int port = request.getServerPort();
+		boolean secure = request.isSecure();
+		String portSpec = "";
+		if ((secure && port != 443) || (!secure && port != 80)) {
+			portSpec = String.format(":%d", port);
+		}
+		return String.format("%s://%s%s", 
+			secure ? "https" : "http", 
+			request.getServerName(),
+			portSpec
+		);
 	}
 
 }
