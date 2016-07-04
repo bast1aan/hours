@@ -39,4 +39,9 @@ public class SessionContainer {
 	public static void setUser(HttpSession session, User user) {
 		session.setAttribute(USER, user);
 	}
+
+	public static void clearUser(HttpSession session) {
+		session.removeAttribute(USER);
+	}
+
 }

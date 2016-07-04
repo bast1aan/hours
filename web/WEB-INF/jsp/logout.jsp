@@ -5,10 +5,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Welcome to this application</title>
+<title>Logout</title>
 </head>
 <body>
-<h1>Welcome, ${user.fullname}!</h1>
-<p><a href="logout.action">Logout</a></p>
+<h1>Logout</h1>
+<p>${result}</p>
+<a href="./">Back</a>
 </body>
 </html>
