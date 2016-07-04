@@ -50,8 +50,11 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 			if (user != null) {
 				if (UserTools.login(user, password)) {
 					SessionContainer.setUser(request.getSession(), user);
+					dao.deleteCode(user); // delete any confirmation codes
 					result = "Successfully logged in";
 					return SUCCESS;
+				} else {
+					result = "Wrong username or password";
 				}
 			} else {
 				result = "No such user";

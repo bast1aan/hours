@@ -163,6 +163,14 @@ public class Dao {
 		
 	}
 	
+	public void deleteCode(User user) {
+		try {
+			deleteCode(user.username, cm.getConnection());
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+	}
+	
 	private void populateUser(User user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
 		user.password = result.getString("password");
