@@ -53,4 +53,13 @@
 			<result name="error">/WEB-INF/jsp/logout.jsp</result>
 		</action>
 	</package>
+	<package name="hoursjson" extends="json-default">
+		<action name="getprojects" class="bast1aan.hours.action.json.GetprojectsAction" method="execute">
+			<result type="json">
+				<param name="includeProperties">
+					projects\[\d+\]\..*
+				</param>
+			</result>
+		</action>
+	</package>
 </struts>

@@ -1,0 +1,9 @@
+<% if (projects && projects.length > 0) { %>
+<ul class="projectlist">
+<% projects.each(function(project) { %>
+    <li id="project<%= project.get('id') %>">
+        <strong><%= project.get('name') %></strong>
+    </li>
+<% }); %>
+</ul>
+<% } %>

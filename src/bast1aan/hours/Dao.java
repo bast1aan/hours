@@ -21,6 +21,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Dao {
 	private static Dao instance;
@@ -169,6 +171,27 @@ public class Dao {
 		} catch (SQLException e) {
 			throw new HoursException("Error executing query", e);
 		}
+	}
+	
+	public List<Project> getProjects(User user) {
+		List<Project> projects = new ArrayList<Project>();
+		final String query = "SELECT * FROM projects WHERE username = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setString(1, user.username);
+			ResultSet result = stmt.executeQuery();
+			while (result.next()) {
+				Project project = new Project();
+				project.id = result.getInt("project_id");
+				project.name = result.getString("project_name");
+				project.username = result.getString("username");
+				project.user = user;
+				projects.add(project);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		return projects;
 	}
 	
 	private void populateUser(User user, ResultSet result) throws SQLException {

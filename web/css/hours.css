@@ -1,0 +1,37 @@
+table tr td,
+body {
+	font-size: 9pt;
+}
+
+#loginbar {
+	display: block;
+	width: 100%;
+	background-color: #aaa;
+}
+
+div.actionBox {
+	margin-left: 5px;
+	display: inline;
+	font-size: 80%;
+	background-color: #aaa;
+}
+
+.hide {
+	display: none;
+}
+
+div.actionBox span {
+	display: none;
+}
+div.actionBox:hover span {
+	display: inline;
+}
+
+span.message { 
+	color: green;
+}
+
+span.error {
+	color: red;
+}
+

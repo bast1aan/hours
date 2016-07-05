@@ -1,14 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Welcome to this application</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Hours</title>
+	<link href="css/hours.css" rel="stylesheet" />
 </head>
 <body>
-<h1>Welcome, ${user.fullname}!</h1>
-<p><a href="logout.action">Logout</a></p>
-</body>
+	<div id="loginbar">Logged in as: ${user.username} <a href="logout.action">Logout</a></div>
+	<div id="projectList"></div>
+	<script src="js/jquery.js"></script>
+	<script src="js/underscore.js"></script>
+	<script src="js/backbone.js"></script>
+	<script src="js/hours.js"></script>
+	<script type="text/javascript">
+		retrieveProjects("${user.username}");
+	</script>
+	</body>
 </html>

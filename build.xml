@@ -51,7 +51,14 @@
 	<target name="resolve" description="retrieve dependencies with ivy" depends="clean-resolve">
 		<ivy:retrieve conf="binaries" pattern="dependencies/lib/[artifact]-[revision](-[classifier]).[ext]"/>
 		<ivy:retrieve conf="sources" pattern="dependencies/libsrc/[artifact]-[revision](-[classifier]).[ext]"/>	
-        </target>
+		<!-- get backbone -->
+		<mkdir dir="dependencies/web/js" />
+		<get src="https://raw.githubusercontent.com/jashkenas/backbone/1.1.2/backbone.js" dest="dependencies/web/js/backbone.js" />
+		<!-- get underscore.js -->
+		<get src="https://raw.github.com/jashkenas/underscore/1.6.0/underscore.js" dest="dependencies/web/js/underscore.js" />
+		<!-- get jquery -->
+		<get src="http://code.jquery.com/jquery-1.11.1.js" dest="dependencies/web/js/jquery.js" />
+	</target>
 
 	<target name="clean-resolve">
 		<delete dir="dependencies" />
