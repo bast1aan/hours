@@ -67,6 +67,38 @@ public class ProjectController implements ServletRequestAware {
 		
 	}
 	
+	public String deleteAction() throws Exception {
+		if (!isValidUser()) {
+			return LOGIN;
+		}
+		if (!request.getMethod().equals("DELETE")) {
+			error = "Invalid HTTP method";
+			return ERROR;
+		}
+		if (project == null) {
+			error = "No project given";
+			return ERROR;
+		}
+		if (project.id == null || project.id <= 0) {
+			error = "No project id given";
+			return ERROR;
+		}
+
+		Dao dao = Dao.getInstance();
+		// check if project exists and logged in user is its owner
+		Project dbProject = dao.getProject(project.id);
+		if (dbProject == null) {
+			error = "Project does not exist";
+			return ERROR;
+		}	
+		if (!dbProject.username.equals(user.username)) {
+			error = "No access to this project";
+			return LOGIN;
+		}
+		dao.deleteProject(dbProject);
+		return SUCCESS;
+	}
+	
 	private boolean isValidUser() {
 		user = SessionContainer.getUser(request.getSession());
 		if (user == null || username == null || ! user.username.equals(username)) {

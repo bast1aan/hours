@@ -183,9 +183,7 @@ public class Dao {
 			ResultSet result = stmt.executeQuery();
 			while (result.next()) {
 				Project project = new Project();
-				project.id = result.getInt("project_id");
-				project.name = result.getString("project_name");
-				project.username = result.getString("username");
+				populate(project, result);
 				project.user = user;
 				projects.add(project);
 			}
@@ -224,6 +222,39 @@ public class Dao {
 		}
 	}
 	
+	public Project getProject(int id) {
+		Project project = null;
+		final String query = "SELECT * FROM projects WHERE project_id = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setInt(1, id);
+			ResultSet result = stmt.executeQuery();
+			while (result.next()) {
+				project = new Project();
+				populate(project, result);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		return project;
+	}
+	
+	public void deleteProject(Project project) {
+		deleteProject(project.id);
+	}
+	
+	public void deleteProject(int id) {
+		final String queryDelete = "DELETE FROM projects WHERE project_id = ?";
+		try {
+			PreparedStatement stmtDelete = cm.getConnection().prepareStatement(queryDelete);
+			stmtDelete.setInt(1, id);
+			stmtDelete.executeUpdate();
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+
+	}
+	
 	private void populateUser(User user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
 		user.password = result.getString("password");
@@ -237,6 +268,12 @@ public class Dao {
 		PreparedStatement stmtDelete = connection.prepareStatement(queryDelete);
 		stmtDelete.setString(1, username);
 		stmtDelete.executeUpdate();
+	}
+	
+	private void populate(Project project, ResultSet result) throws SQLException {
+		project.id = result.getInt("project_id");
+		project.name = result.getString("project_name");
+		project.username = result.getString("username");
 	}
 
 }

@@ -71,7 +71,7 @@
 				</param>
 			</result>
 		</action>
-		<action name="projects/save" class="bast1aan.hours.action.json.ProjectController" method="saveAction">
+		<action name="projects/*" class="bast1aan.hours.action.json.ProjectController" method="{1}Action">
 			<result name="success" type="json">
 				<param name="includeProperties">
 					project\..*
