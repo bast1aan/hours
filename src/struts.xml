@@ -64,12 +64,25 @@
 				<param name="includeProperties">error</param>
 			</result>
 		</global-results>
-		<action name="projects/*" class="bast1aan.hours.action.json.ProjectController" method="{1}Action">
+		<action name="projects/list" class="bast1aan.hours.action.json.ProjectController" method="listAction">
 			<result name="success" type="json">
 				<param name="includeProperties">
 					projects\[\d+\]\..*
 				</param>
 			</result>
+		</action>
+		<action name="projects/save" class="bast1aan.hours.action.json.ProjectController" method="saveAction">
+			<result name="success" type="json">
+				<param name="includeProperties">
+					project\..*
+				</param>
+			</result>
+			<interceptor-ref name="servletConfig" />
+			<interceptor-ref name="json">
+				<param name="includeProperties">
+					project,username
+				</param>
+			</interceptor-ref>
 		</action>
 	</package>
 </struts>

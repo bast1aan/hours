@@ -36,18 +36,44 @@ public class ProjectController implements ServletRequestAware {
 	@Setter private String username;
 	@Getter private List<Project> projects;
 	@Getter private String error;
+	@Setter @Getter private Project project;
+	private User user;
+		
 	private HttpServletRequest request;
 	
 	public String listAction() throws Exception {
-		User user = SessionContainer.getUser(request.getSession());
-		if (user != null && user.username.equals(username)) {
-			Dao dao = Dao.getInstance();
-			projects = dao.getProjects(UserTools.userWithoutPrivateData(user));
-			return SUCCESS;
-		} else {
-			error = "Invalid user";
+		if (!isValidUser()) {
 			return LOGIN;
 		}
+		Dao dao = Dao.getInstance();
+		projects = dao.getProjects(UserTools.userWithoutPrivateData(user));
+		return SUCCESS;
+	}
+	
+	public String saveAction() throws Exception {
+		if (!isValidUser()) {
+			return LOGIN;
+		}
+		if (project == null) {
+			error = "No project given";
+			return ERROR;
+		}
+		project.username = user.username;
+		project.user = UserTools.userWithoutPrivateData(user);
+		Dao dao = Dao.getInstance();
+		dao.addProject(project);
+		
+		return SUCCESS;
+		
+	}
+	
+	private boolean isValidUser() {
+		user = SessionContainer.getUser(request.getSession());
+		if (user == null || username == null || ! user.username.equals(username)) {
+			error = "Invalid user";
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,6 +193,35 @@ public class Dao {
 			throw new HoursException("Error executing query", e);
 		}
 		return projects;
+	}
+	
+	public void addProject(Project project) {
+		final String query = "INSERT INTO projects (project_name, username) VALUES (?, ?)";
+		try {
+			String username = project.username;
+			if (username == null || username.length() == 0) {
+				if (project.user == null || project.user.username == null || project.user.username.length() == 0) {
+					throw new HoursException("In Dao.addProject() : both username and user are not set");
+				}
+				username = project.user.username;
+			}
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, project.name);
+			stmt.setString(2, username);
+			
+			int affected = stmt.executeUpdate();
+			
+			if (affected != 0) {
+				// set genereated primary key on project object
+				ResultSet keys = stmt.getGeneratedKeys();
+				if (keys.next()) {
+					project.id = keys.getInt(1);
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
 	}
 	
 	private void populateUser(User user, ResultSet result) throws SQLException {
