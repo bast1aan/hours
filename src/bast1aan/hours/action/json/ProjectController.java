@@ -22,31 +22,34 @@ import bast1aan.hours.Project;
 import bast1aan.hours.SessionContainer;
 import bast1aan.hours.User;
 import bast1aan.hours.UserTools;
-import com.opensymphony.xwork2.ActionSupport;
+import static com.opensymphony.xwork2.Action.ERROR;
+import static com.opensymphony.xwork2.Action.LOGIN;
+import static com.opensymphony.xwork2.Action.SUCCESS;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
-public class GetprojectsAction extends ActionSupport implements ServletRequestAware {
+public class ProjectController implements ServletRequestAware {
 
 	@Setter private String username;
 	@Getter private List<Project> projects;
+	@Getter private String error;
 	private HttpServletRequest request;
 	
-	@Override
-	public String execute() throws Exception {
+	public String listAction() throws Exception {
 		User user = SessionContainer.getUser(request.getSession());
 		if (user != null && user.username.equals(username)) {
 			Dao dao = Dao.getInstance();
 			projects = dao.getProjects(UserTools.userWithoutPrivateData(user));
 			return SUCCESS;
 		} else {
-			return ERROR;
+			error = "Invalid user";
+			return LOGIN;
 		}
 	}
-
+	
 	@Override
 	public void setServletRequest(HttpServletRequest hsr) {
 		this.request = hsr;

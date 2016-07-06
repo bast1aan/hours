@@ -33,7 +33,7 @@ var projects = new ProjectsCollection();
 
 function retrieveProjects(username) {
 	$.ajax({
-		url : "getprojects.action?username=" + username,
+		url : "projects/list?username=" + username,
 		cache : false,
 		type : 'GET',
 		dataType : 'json',

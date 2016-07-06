@@ -26,6 +26,7 @@
 <struts>
  
 	<constant name="struts.devMode" value="true" />
+	<constant name="struts.enable.SlashesInActionNames" value="true" />
  
 	<package name="hours" extends="struts-default">
 		<action name="index" class="bast1aan.hours.action.IndexAction" method="execute">
@@ -53,9 +54,18 @@
 			<result name="error">/WEB-INF/jsp/logout.jsp</result>
 		</action>
 	</package>
-	<package name="hoursjson" extends="json-default">
-		<action name="getprojects" class="bast1aan.hours.action.json.GetprojectsAction" method="execute">
-			<result type="json">
+	<package name="hours-json" extends="json-default">
+		<global-results>
+			<result name="error" type="json">
+				<param name="includeProperties">error</param>
+			</result>
+			<result name="login" type="json">
+				<param name="statusCode">403</param>
+				<param name="includeProperties">error</param>
+			</result>
+		</global-results>
+		<action name="projects/*" class="bast1aan.hours.action.json.ProjectController" method="{1}Action">
+			<result name="success" type="json">
 				<param name="includeProperties">
 					projects\[\d+\]\..*
 				</param>
