@@ -34,6 +34,8 @@ public class Settings {
 	public final static String USERNAME = "username";
 	public final static String PASSWORD = "password";
 	public final static String REMOTE_ADDR_HEADER = "remote_addr_header";
+	public final static String COOKIE_DOMAIN = "cookie_domain";
+	public final static String BASE_URL = "base_url";
 	
 	private static Settings instance;
 	
