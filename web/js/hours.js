@@ -57,12 +57,44 @@ function retrieveProjects(username) {
 	});
 }
 
+function deleteProject(id, view) {
+	var url = "/projects/delete?username=" + username;
+	if (baseUrl) {
+		url = baseUrl + url;
+	}
+    $.ajax({
+        url : url,
+        cache : false,
+        type : 'DELETE',
+        dataType : 'json',
+        crossDomain : true,
+        data : JSON.stringify({username : username, project : { id : id }}),
+        contentType : 'application/json',
+        success : function() {
+            if (view) {
+                view.collection.remove(id);
+                view.render();
+            }
+        }
+    });
+}
+
 var ProjectListView = Backbone.View.extend({
 	initialize : function() {this.listenTo(this.collection, "reset", this.render);},
 	render : function() {
 		this.$el.html(_.template(projectListHtml, {projects : this.collection}));
 		return this;
-	}
+	},
+	events : {
+		"click .delete" : "deleteProject"
+	},
+	deleteProject : function(e) {
+        var projectId = $(e.currentTarget).data('id');
+        var projectName = this.collection.get(projectId).get('name');
+        if (confirm('Are you sure you want to remove project "' + projectName + '"?')) {
+            deleteProject(projectId, this);
+        }
+    }
 });
 
 var listView = new ProjectListView({collection: projects});
