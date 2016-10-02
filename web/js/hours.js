@@ -90,8 +90,11 @@ var ProjectListView = Backbone.View.extend({
 	},
 	deleteProject : function(e) {
         var projectId = $(e.currentTarget).data('id');
-        deleteProject(projectId, this);
-	}
+        var projectName = this.collection.get(projectId).get('name');
+        if (confirm('Are you sure you want to remove project "' + projectName + '"?')) {
+            deleteProject(projectId, this);
+        }
+    }
 });
 
 var listView = new ProjectListView({collection: projects});
