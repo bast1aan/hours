@@ -16,7 +16,9 @@
 	<script src="js/backbone.js"></script>
 	<script src="js/hours.js"></script>
 	<script type="text/javascript">
+		document.cookie = 'hours_username=${user.username}; path=/';
+		document.cookie = 'hours_fullname=${user.fullname}; path=/';
 		retrieveProjects("${user.username}");
 	</script>
-	</body>
+</body>
 </html>
