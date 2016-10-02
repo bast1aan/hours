@@ -71,8 +71,10 @@ function deleteProject(id, view) {
         data : JSON.stringify({username : username, project : { id : id }}),
         contentType : 'application/json',
         success : function() {
-            view.collection.remove(id);
-            view.render();
+            if (view) {
+                view.collection.remove(id);
+                view.render();
+            }
         }
     });
 }
