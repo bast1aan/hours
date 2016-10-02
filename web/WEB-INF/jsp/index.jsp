@@ -18,6 +18,7 @@
 	<script type="text/javascript">
 		document.cookie = 'hours_username=${user.username}; path=/';
 		document.cookie = 'hours_fullname=${user.fullname}; path=/';
+		document.cookie = 'hours_base_url=${baseUrl}; path=/';
 		retrieveProjects("${user.username}");
 	</script>
 </body>

@@ -18,6 +18,7 @@
 package bast1aan.hours.action;
 
 import bast1aan.hours.SessionContainer;
+import bast1aan.hours.Settings;
 import bast1aan.hours.User;
 import bast1aan.hours.UserTools;
 import com.opensymphony.xwork2.ActionSupport;
@@ -34,6 +35,7 @@ public class IndexAction extends ActionSupport implements ServletRequestAware {
 	private HttpServletRequest request;
 	
 	@Getter private User user;
+	@Getter private String baseUrl;
 	
 	@Override
 	public void setServletRequest(HttpServletRequest hsr) {
@@ -47,6 +49,9 @@ public class IndexAction extends ActionSupport implements ServletRequestAware {
 			return LOGIN;
 		}
 		user = UserTools.userWithoutPrivateData(fullUser);
+	
+		Settings settings = Settings.getInstance();
+		baseUrl = settings.get(Settings.BASE_URL);
 		
 		return SUCCESS;
 	}
