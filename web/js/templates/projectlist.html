@@ -1,8 +1,9 @@
 <% if (projects && projects.length > 0) { %>
+<span>Double-click on the project to edit its name.</span>
 <ul class="projectlist">
 <% projects.each(function(project) { %>
 	<li id="project<%= project.get('id') %>">
-		<strong><%= project.get('name') %></strong> <button class="delete" data-id="<%= project.get('id') %>">Delete</button>
+		<strong class="name" data-id="<%= project.get('id') %>"><%= project.get('name') %></strong> <button class="delete" data-id="<%= project.get('id') %>">Delete</button>
 	</li>
 <% }); %>
 </ul>

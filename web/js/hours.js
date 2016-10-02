@@ -79,6 +79,29 @@ function deleteProject(id, view) {
 	});
 }
 
+function renameProject(id, name, view) {
+	var url = "/projects/update?username=" + username;
+	if (baseUrl) {
+		url = baseUrl + url;
+	}
+	$.ajax({
+		url : url,
+		cache : false,
+		type : 'PUT',
+		dataType : 'json',
+		crossDomain : true,
+		data : JSON.stringify({username : username, project : { id : id, name : name }}),
+		contentType : 'application/json',
+		success : function() {
+			if (view) {
+				view.collection.get(id).set('name', name);
+				view.render();
+			}
+		}
+	});
+
+}
+
 var ProjectListView = Backbone.View.extend({
 	initialize : function() {this.listenTo(this.collection, "reset", this.render);},
 	render : function() {
@@ -86,7 +109,8 @@ var ProjectListView = Backbone.View.extend({
 		return this;
 	},
 	events : {
-		"click .delete" : "deleteProject"
+		"click .delete" : "deleteProject",
+		"dblclick .name" : "editName",
 	},
 	deleteProject : function(e) {
 		var projectId = $(e.currentTarget).data('id');
@@ -94,6 +118,31 @@ var ProjectListView = Backbone.View.extend({
 		if (confirm('Are you sure you want to remove project "' + projectName + '"?')) {
 			deleteProject(projectId, this);
 		}
+	},
+	editName : function(e) {
+		var view = this;
+		var $el = $(e.currentTarget);
+		var projectId = $el.data('id');
+		var name = this.collection.get(projectId).get('name');
+		var input = document.createElement("input");
+		input.setAttribute('type', 'text');
+		input.setAttribute('value', name);
+		$(input).on('keydown', function(keyEvent) {
+			if (keyEvent.keyCode == 13 /* enter key */) {
+				var newName = keyEvent.currentTarget.value;
+				if (confirm('Are you sure you want to rename project "' + name + '" to "'+ newName + '"?')) {
+					renameProject(projectId, newName, view);
+				}
+			}
+
+			if (keyEvent.keyCode == 27 /* esc key */) {
+				e.currentTarget.removeChild(input);
+				view.render();
+			}
+		})
+		e.currentTarget.innerHTML = '';
+		e.currentTarget.appendChild(input);
+		input.focus();
 	}
 });
 
