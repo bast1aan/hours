@@ -102,6 +102,29 @@ function renameProject(id, name, view) {
 
 }
 
+function newProject(name, view) {
+	var url = "/projects/save?username=" + username;
+	if (baseUrl) {
+		url = baseUrl + url;
+	}
+	$.ajax({
+		url : url,
+		cache : false,
+		type : 'POST',
+		dataType : 'json',
+		crossDomain : true,
+		data : JSON.stringify({username : username, project : { name : name }}),
+		contentType : 'application/json',
+		success : function(data) {
+			if (view && data.project) {
+				view.collection.add(data.project);
+				view.render();
+			}
+		}
+	});
+
+}
+
 var ProjectListView = Backbone.View.extend({
 	initialize : function() {this.listenTo(this.collection, "reset", this.render);},
 	render : function() {
@@ -111,6 +134,7 @@ var ProjectListView = Backbone.View.extend({
 	events : {
 		"click .delete" : "deleteProject",
 		"dblclick .name" : "editName",
+		"click .add" : "addProject",
 	},
 	deleteProject : function(e) {
 		var projectId = $(e.currentTarget).data('id');
@@ -143,6 +167,44 @@ var ProjectListView = Backbone.View.extend({
 		e.currentTarget.innerHTML = '';
 		e.currentTarget.appendChild(input);
 		input.focus();
+	},
+	addProject : function(e) {
+		var view = this;
+		var el = e.currentTarget;
+		var elParent = el.parentNode;
+		var input = document.createElement("input");
+		input.setAttribute('type', 'text');
+		elParent.insertBefore(input, el);
+		var addButton = document.createElement("button");
+		addButton.appendChild(document.createTextNode('Add project'));
+		elParent.insertBefore(addButton, el);
+		$(el).hide();
+
+		$(addButton).on('click', newProjectFromInput);
+		$(input).on('keydown', function(keyEvent) {
+			if (keyEvent.keyCode == 13 /* enter key */) {
+				newProjectFromInput();
+			}
+			if (keyEvent.keyCode == 27 /* esc key */) {
+				elParent.removeChild(input);
+				elParent.removeChild(addButton);
+				$(el).show();
+			}
+		});
+		input.focus();
+
+		function newProjectFromInput() {
+			var name = input.value;
+			if (!name) {
+				alert('No name given. Press ESC in text field to cancel new project.')
+			} else {
+				newProject(name, view);
+				elParent.removeChild(input);
+				elParent.removeChild(addButton);
+				$(el).show();
+			}
+		}
+
 	}
 });
 
