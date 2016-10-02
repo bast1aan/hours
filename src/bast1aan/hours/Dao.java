@@ -222,6 +222,21 @@ public class Dao {
 		}
 	}
 	
+	public void update(Project project) {
+		if (project.id <= 0) {
+			throw new HoursException("id must be set");
+		}
+		final String query = "UPDATE projects SET project_name = ? WHERE project_id = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setString(1, project.name);
+			stmt.setInt(2, project.id);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+	}
+	
 	public Project getProject(int id) {
 		Project project = null;
 		final String query = "SELECT * FROM projects WHERE project_id = ?";
