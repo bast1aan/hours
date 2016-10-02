@@ -71,7 +71,7 @@ $(document).ready(function() {
     username = Cookies.get('hours_username');
     baseUrl = Cookies.get('hours_base_url');
     if (username) {
-        $('#loginbar').html('Logged in as: ' + username + ' <a href="logout.action">Logout</a>');
+        $('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a>');
      	$('#application').append(listView.$el);
         retrieveProjects(username);
     } else {
