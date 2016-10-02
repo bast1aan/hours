@@ -18,6 +18,10 @@
 
 "use strict";
 
+var username;
+
+var baseUrl;
+
 var projectListHtml = loadTemplate("js/templates/projectlist.html");
 
 var Project = Backbone.Model.extend( {
@@ -32,8 +36,12 @@ var ProjectsCollection = Backbone.Collection.extend({model : Project});
 var projects = new ProjectsCollection();
 
 function retrieveProjects(username) {
+	var url = "/projects/list?username=" + username;
+	if (baseUrl) {
+		url = baseUrl + url;
+	}
 	$.ajax({
-		url : "projects/list?username=" + username,
+		url : url,
 		cache : false,
 		type : 'GET',
 		dataType : 'json',
@@ -58,8 +66,17 @@ var ProjectListView = Backbone.View.extend({
 });
 
 var listView = new ProjectListView({collection: projects});
+
 $(document).ready(function() {
-	$('#projectList').append(listView.$el);
+    username = Cookies.get('hours_username');
+    baseUrl = Cookies.get('hours_base_url');
+    if (username) {
+        $('#loginbar').html('Logged in as: ' + username + ' <a href="logout.action">Logout</a>');
+     	$('#application').append(listView.$el);
+        retrieveProjects(username);
+    } else {
+        $('#loginbar').html('Not logged in. <a href="login.jsp">Login</a>');
+    }
 });
 
 function loadTemplate(url) {

@@ -10,7 +10,7 @@
 </head>
 <body>
 	<div id="loginbar">Logged in as: ${user.username} <a href="logout.action">Logout</a></div>
-	<div id="projectList"></div>
+	<div id="application"></div>
 	<script src="js/jquery.js"></script>
 	<script src="js/underscore.js"></script>
 	<script src="js/backbone.js"></script>
@@ -19,7 +19,7 @@
 		document.cookie = 'hours_username=${user.username}; path=/';
 		document.cookie = 'hours_fullname=${user.fullname}; path=/';
 		document.cookie = 'hours_base_url=${baseUrl}; path=/';
-		retrieveProjects("${user.username}");
+		location.href = 'hours.html';
 	</script>
 </body>
 </html>
