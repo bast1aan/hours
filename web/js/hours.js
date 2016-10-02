@@ -62,21 +62,21 @@ function deleteProject(id, view) {
 	if (baseUrl) {
 		url = baseUrl + url;
 	}
-    $.ajax({
-        url : url,
-        cache : false,
-        type : 'DELETE',
-        dataType : 'json',
-        crossDomain : true,
-        data : JSON.stringify({username : username, project : { id : id }}),
-        contentType : 'application/json',
-        success : function() {
-            if (view) {
-                view.collection.remove(id);
-                view.render();
-            }
-        }
-    });
+	$.ajax({
+		url : url,
+		cache : false,
+		type : 'DELETE',
+		dataType : 'json',
+		crossDomain : true,
+		data : JSON.stringify({username : username, project : { id : id }}),
+		contentType : 'application/json',
+		success : function() {
+			if (view) {
+				view.collection.remove(id);
+				view.render();
+			}
+		}
+	});
 }
 
 var ProjectListView = Backbone.View.extend({
@@ -89,26 +89,26 @@ var ProjectListView = Backbone.View.extend({
 		"click .delete" : "deleteProject"
 	},
 	deleteProject : function(e) {
-        var projectId = $(e.currentTarget).data('id');
-        var projectName = this.collection.get(projectId).get('name');
-        if (confirm('Are you sure you want to remove project "' + projectName + '"?')) {
-            deleteProject(projectId, this);
-        }
-    }
+		var projectId = $(e.currentTarget).data('id');
+		var projectName = this.collection.get(projectId).get('name');
+		if (confirm('Are you sure you want to remove project "' + projectName + '"?')) {
+			deleteProject(projectId, this);
+		}
+	}
 });
 
 var listView = new ProjectListView({collection: projects});
 
 $(document).ready(function() {
-    username = Cookies.get('hours_username');
-    baseUrl = Cookies.get('hours_base_url');
-    if (username) {
-        $('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a>');
-     	$('#application').append(listView.$el);
-        retrieveProjects(username);
-    } else {
-        $('#loginbar').html('Not logged in. <a href="login.jsp">Login</a>');
-    }
+	username = Cookies.get('hours_username');
+	baseUrl = Cookies.get('hours_base_url');
+	if (username) {
+		$('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a>');
+		$('#application').append(listView.$el);
+		retrieveProjects(username);
+	} else {
+		$('#loginbar').html('Not logged in. <a href="login.jsp">Login</a>');
+	}
 });
 
 function loadTemplate(url) {
