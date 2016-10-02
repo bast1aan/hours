@@ -37,15 +37,15 @@ public class Dao {
 	
 	private final ConnectionManager cm = new ConnectionManager();
 
-	public User findUser(String username) {
-		User user = null;
+	public AuthUser findUser(String username) {
+		AuthUser user = null;
 		String query = "SELECT * FROM users WHERE username = ?";
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, username);
 			ResultSet result = stmt.executeQuery();
 			if (result.next()) {
-				user = new User();
+				user = new AuthUser();
 				populateUser(user, result);
 			}
 		} catch (SQLException e) {
@@ -55,14 +55,14 @@ public class Dao {
 	}
 
 	public User findUserByEmail(String email) {
-		User user = null;
+		AuthUser user = null;
 		String query = "SELECT * FROM users WHERE email = ?";
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, email);
 			ResultSet result = stmt.executeQuery();
 			if (result.next()) {
-				user = new User();
+				user = new AuthUser();
 				populateUser(user, result);
 			}
 		} catch (SQLException e) {
@@ -71,15 +71,15 @@ public class Dao {
 		return user;
 	}
 
-	public User findUserByCode(String code) {
-		User user = null;
+	public AuthUser findUserByCode(String code) {
+		AuthUser user = null;
 		String query = "SELECT u.* FROM users_newpassword un LEFT JOIN users u ON un.username = u.username WHERE un.confirmcode = ?";
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, code);
 			ResultSet result = stmt.executeQuery();
 			if (result.next()) {
-				user = new User();
+				user = new AuthUser();
 				populateUser(user, result);
 			}
 		} catch (SQLException e) {
@@ -130,7 +130,7 @@ public class Dao {
 	 * 
 	 * @param user 
 	 */
-	public void update(User user) {
+	public void update(AuthUser user) {
 		final String query = "UPDATE users SET password = ?, email = ?, fullname = ?, salt = ? WHERE username = ?";
 
 		final Connection connection = cm.getConnection();
@@ -255,7 +255,7 @@ public class Dao {
 
 	}
 	
-	private void populateUser(User user, ResultSet result) throws SQLException {
+	private void populateUser(AuthUser user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
 		user.password = result.getString("password");
 		user.email = result.getString("email");

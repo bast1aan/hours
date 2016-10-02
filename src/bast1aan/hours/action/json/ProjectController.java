@@ -20,6 +20,7 @@ package bast1aan.hours.action.json;
 import bast1aan.hours.Dao;
 import bast1aan.hours.Project;
 import bast1aan.hours.SessionContainer;
+import bast1aan.hours.AuthUser;
 import bast1aan.hours.User;
 import bast1aan.hours.UserTools;
 import static com.opensymphony.xwork2.Action.ERROR;
@@ -46,7 +47,7 @@ public class ProjectController implements ServletRequestAware {
 			return LOGIN;
 		}
 		Dao dao = Dao.getInstance();
-		projects = dao.getProjects(UserTools.userWithoutPrivateData(user));
+		projects = dao.getProjects(user);
 		return SUCCESS;
 	}
 	
@@ -59,7 +60,7 @@ public class ProjectController implements ServletRequestAware {
 			return ERROR;
 		}
 		project.username = user.username;
-		project.user = UserTools.userWithoutPrivateData(user);
+		project.user = user;
 		Dao dao = Dao.getInstance();
 		dao.addProject(project);
 		
@@ -100,11 +101,12 @@ public class ProjectController implements ServletRequestAware {
 	}
 	
 	private boolean isValidUser() {
-		user = SessionContainer.getUser(request.getSession());
-		if (user == null || username == null || ! user.username.equals(username)) {
+		AuthUser authUser = SessionContainer.getUser(request.getSession());
+		if (authUser == null || username == null || ! authUser.username.equals(username)) {
 			error = "Invalid user";
 			return false;
 		}
+		user = UserTools.userWithoutPrivateData(authUser);
 		return true;
 	}
 	

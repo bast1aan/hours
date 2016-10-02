@@ -50,7 +50,7 @@ public class UserTools {
 	 * @param password
 	 * @return valid or not
 	 */
-	public static boolean login(User user, String password) {
+	public static boolean login(AuthUser user, String password) {
 		return plainPwdToHash(user.salt, password).equals(user.password);
 	}
 	
@@ -61,7 +61,7 @@ public class UserTools {
 	 * @param user
 	 * @param plainPassword 
 	 */
-	public static void newPassword(User user, String plainPassword) {
+	public static void newPassword(AuthUser user, String plainPassword) {
 		user.salt = generateNewCode();
 		user.password = plainPwdToHash(user.salt, plainPassword);
 	}

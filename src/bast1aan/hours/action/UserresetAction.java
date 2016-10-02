@@ -19,7 +19,7 @@ package bast1aan.hours.action;
 
 import bast1aan.hours.Dao;
 import bast1aan.hours.SessionContainer;
-import bast1aan.hours.User;
+import bast1aan.hours.AuthUser;
 import bast1aan.hours.UserTools;
 import com.opensymphony.xwork2.ActionSupport;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +44,7 @@ public class UserresetAction extends ActionSupport implements ServletRequestAwar
 	@Override
 	public String execute() throws Exception {
 		HttpSession session = request.getSession();
-		User user = SessionContainer.getUser(session);
+		AuthUser user = SessionContainer.getUser(session);
 		if (user == null) {
 			result = "Not logged in";
 			return ERROR;

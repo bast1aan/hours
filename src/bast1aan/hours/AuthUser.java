@@ -17,31 +17,10 @@
  */
 package bast1aan.hours;
 
-import javax.servlet.http.HttpSession;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Session container acts as Session data provider and
- * maintains definitions of data to be stored in the Session
- * and provides in type-safe way.
- */
-public class SessionContainer {
-	
-	private static final String USER = "user"; 
-	
-	public static AuthUser getUser(HttpSession session) {
-		Object user = session.getAttribute(USER);
-		if (user instanceof AuthUser) {
-			return (AuthUser)user;
-		}
-		return null;
-	}
-	
-	public static void setUser(HttpSession session, AuthUser user) {
-		session.setAttribute(USER, user);
-	}
-
-	public static void clearUser(HttpSession session) {
-		session.removeAttribute(USER);
-	}
-
+public class AuthUser extends User {
+	@Getter @Setter public String password;
+	@Getter @Setter public String salt;
 }

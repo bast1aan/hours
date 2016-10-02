@@ -20,7 +20,7 @@ package bast1aan.hours.action;
 
 import bast1aan.hours.Dao;
 import bast1aan.hours.SessionContainer;
-import bast1aan.hours.User;
+import bast1aan.hours.AuthUser;
 import bast1aan.hours.UserTools;
 import com.opensymphony.xwork2.ActionSupport;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +46,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 	public String execute() throws Exception {
 		if (username != null && password != null) {
 			Dao dao = Dao.getInstance();
-			User user = dao.findUser(username);
+			AuthUser user = dao.findUser(username);
 			if (user != null) {
 				if (UserTools.login(user, password)) {
 					SessionContainer.setUser(request.getSession(), user);

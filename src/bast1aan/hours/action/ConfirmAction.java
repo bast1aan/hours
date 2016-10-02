@@ -19,7 +19,7 @@ package bast1aan.hours.action;
 
 import bast1aan.hours.Dao;
 import bast1aan.hours.SessionContainer;
-import bast1aan.hours.User;
+import bast1aan.hours.AuthUser;
 import com.opensymphony.xwork2.ActionSupport;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
@@ -41,7 +41,7 @@ public class ConfirmAction extends ActionSupport implements ServletRequestAware 
 		String code = request.getParameter("code");
 		if (code != null && code.length() > 0) {
 			Dao dao = Dao.getInstance();
-			User user = dao.findUserByCode(code);
+			AuthUser user = dao.findUserByCode(code);
 			if (user != null) {
 				SessionContainer.setUser(request.getSession(), user);
 				result = "Successfully logged in with code";
