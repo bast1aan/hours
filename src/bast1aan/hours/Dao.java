@@ -297,6 +297,37 @@ public class Dao {
 		return hours;
 	}
 	
+	public void create(Hour hour) {
+		final String query = "INSERT INTO hours (description, project_id, start, end) VALUES (?, ?, ?, ?)";
+		try {
+			Integer projectId = hour.projectId;
+			if (projectId == null || projectId <= 0) {
+				if (hour.project == null || hour.project.id == null || hour.project.id <= 0 ) {
+					throw new HoursException("In Dao.create(Hour) : both projectId and project not set");
+				}
+				projectId = hour.project.id;
+			}
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, hour.description);
+			stmt.setInt(2, projectId);
+			stmt.setDate(3, hour.start);
+			stmt.setDate(4, hour.end);
+			
+			int affected = stmt.executeUpdate();
+			
+			if (affected != 0) {
+				// set genereated primary key on project object
+				ResultSet keys = stmt.getGeneratedKeys();
+				if (keys.next()) {
+					hour.id = keys.getInt(1);
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		
+	}
 	
 	private void populateUser(AuthUser user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
