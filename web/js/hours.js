@@ -214,5 +214,20 @@ function doRequest(params) {
 		params['contentType'] = 'application/json';
 	}
 
+	if (!params['error']) {
+		params['error'] = function(jqHXR, textStatus, e) {
+			var errorMessage = "Error executing request to backend:\nURL: "
+				+ params['url'] + "\nMethod: " + params['type'] + "\n\n";
+
+			if (jqHXR.status && jqHXR.statusText)
+				errorMessage += "Status: " + jqHXR.status + " " + jqHXR.statusText + "\n";
+
+			if (jqHXR.responseJSON && jqHXR.responseJSON['error'])
+				errorMessage += "Message: " + jqHXR.responseJSON['error']+ "\n";
+
+			alert(errorMessage);
+		}
+	}
+
 	$.ajax(params);
 }
