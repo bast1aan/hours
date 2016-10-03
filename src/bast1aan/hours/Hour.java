@@ -20,7 +20,7 @@ package bast1aan.hours;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.sql.Date;
+import java.util.Date;
 
 public class Hour {
 	@Getter @Setter	public Integer id;
