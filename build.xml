@@ -37,6 +37,7 @@
 		<mkdir dir="antbuild/lib" />
 		<mkdir dir="antbuild/web" />
 		<mkdir dir="antbuild/web/js" />
+		<mkdir dir="antbuild/web/css" />
 	</target>
 	
 	<target name="unpack">
@@ -60,6 +61,12 @@
 		<get src="http://code.jquery.com/jquery-1.11.1.js" dest="dependencies/web/js/jquery.js" />
 		<!-- get js-cookie -->
 		<get src="https://github.com/js-cookie/js-cookie/releases/download/v2.1.3/js.cookie-2.1.3.min.js" dest="dependencies/web/js/js-cookie.js" />
+		<!-- get jquery ui -->
+		<!-- original URL https://jqueryui.com/resources/download/jquery-ui-1.11.1.zip,
+			but this server returns 403 to the ant downloader :( -->
+		<get src="https://users.welmers.net/bastiaan/jquery-ui-1.11.1.zip" dest="dependencies/jquery-ui-1.11.1.zip" />
+		<unzip src="dependencies/jquery-ui-1.11.1.zip" dest="dependencies/web/" />
+		<move file="dependencies/web/jquery-ui-1.11.1" tofile="dependencies/web/jquery-ui" />
 	</target>
 
 	<target name="clean-resolve">
