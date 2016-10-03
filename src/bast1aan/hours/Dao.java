@@ -345,6 +345,24 @@ public class Dao {
 		}
 	}
 	
+	public Hour getHour(int id) {
+		Hour hour = null;
+		final String query = "SELECT * FROM hours WHERE hour_id = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setInt(1, id);
+			ResultSet result = stmt.executeQuery();
+			while (result.next()) {
+				hour = new Hour();
+				populate(hour, result);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		return hour;
+		
+	}
+	
 	private void populateUser(AuthUser user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
 		user.password = result.getString("password");
