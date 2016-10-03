@@ -84,5 +84,25 @@
 				</param>
 			</interceptor-ref>
 		</action>
+		<action name="hours/list" class="bast1aan.hours.action.json.HourController" method="listAction">
+			<result name="success" type="json">
+				<param name="includeProperties">
+					hours\[\d+\]\..*
+				</param>
+			</result>
+		</action>
+		<action name="hours/*" class="bast1aan.hours.action.json.HourController" method="{1}Action">
+			<result name="success" type="json">
+				<param name="includeProperties">
+					hour\..*
+				</param>
+			</result>
+			<interceptor-ref name="servletConfig" />
+			<interceptor-ref name="json">
+				<param name="includeProperties">
+					hour,projectId,username
+				</param>
+			</interceptor-ref>
+		</action>
 	</package>
 </struts>
