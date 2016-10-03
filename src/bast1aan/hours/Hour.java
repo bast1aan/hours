@@ -20,10 +20,13 @@ package bast1aan.hours;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.sql.Date;
 
 public class Hour {
 	@Getter @Setter	public Integer id;
 	@Getter @Setter	public String description;
 	@Getter @Setter	public Integer projectId;
 	@Getter @Setter	public Project project;
+	@Getter @Setter public Date start;
+	@Getter @Setter public Date end;
 }

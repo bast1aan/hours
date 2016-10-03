@@ -269,6 +269,34 @@ public class Dao {
 		}
 
 	}
+
+	public List<Hour> getHoursByProject(Project project) {
+		return getHoursByProject(project, null);
+	}
+	
+	public List<Hour> getHoursByProject(Project project, Integer limit) {
+		
+		List<Hour> hours = new ArrayList<Hour>();
+		String query = "SELECT * FROM hours WHERE project_id = ? ORDER BY hour_id DESC";
+		if (limit != null) {
+			query += " LIMIT " + limit;
+		}
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setInt(1, project.id);
+			ResultSet result = stmt.executeQuery();
+			while (result.next()) {
+				Hour hour = new Hour();
+				populate(hour, result);
+				hour.project = project;
+				hours.add(hour);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		return hours;
+	}
+	
 	
 	private void populateUser(AuthUser user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
@@ -289,6 +317,14 @@ public class Dao {
 		project.id = result.getInt("project_id");
 		project.name = result.getString("project_name");
 		project.username = result.getString("username");
+	}
+	
+	private void populate(Hour hour, ResultSet result) throws SQLException {
+		hour.id = result.getInt("hour_id");
+		hour.description = result.getString("description");
+		hour.projectId = result.getInt("project_id");
+		hour.start = result.getDate("start");
+		hour.end = result.getDate("end");
 	}
 
 }
