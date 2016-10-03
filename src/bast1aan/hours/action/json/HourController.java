@@ -29,6 +29,7 @@ import lombok.Setter;
 
 public class HourController extends BaseController {
 
+	@Setter private Hour hour;
 	@Getter private List<Hour> hours;
 	@Setter private Integer projectId;
 	private final Dao dao = Dao.getInstance();
@@ -46,6 +47,39 @@ public class HourController extends BaseController {
 		return SUCCESS;
 	}
 
+	public String createAction() throws Exception {
+		if (!isValidUser()) {
+			return LOGIN;
+		}
+
+		String method = request.getMethod();
+		if (!method.equals("POST")) {
+			error = "Invalid HTTP method";
+			return ERROR;
+		}
+		
+		if (hour == null) {
+			error = "No hour object given";
+			return ERROR;
+		}
+		
+		if ((projectId == null || projectId <= 0) && hour.projectId != null && hour.projectId > 0) {
+			projectId = hour.projectId;
+		}
+		
+		Project project = getProject();
+		if (project == null) {
+			error = "No access to this project";
+			return ERROR;
+		}
+		hour.project = project;
+		hour.projectId = project.id;
+
+		dao.create(hour);
+		
+		return SUCCESS;
+	}
+	
 	private Project getProject() {
 		Project project = dao.getProject(projectId);
 		if (project == null || project.username == null || !project.username.equals(user.username)) {
