@@ -87,5 +87,10 @@ public class HourController extends BaseController {
 		}
 		return project;
 	}
+
+	@Override
+	public String getError() {
+		return error;
+	}
 	
 }

@@ -128,4 +128,8 @@ public class ProjectController extends BaseController {
 		return SUCCESS;
 	}
 
+	@Override
+	public String getError() {
+		return error;
+	}
 }

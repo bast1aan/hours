@@ -30,7 +30,7 @@ abstract public class BaseController implements ServletRequestAware {
 	protected HttpServletRequest request;
 	protected User user;
 	@Setter protected String username;
-	@Getter protected String error;
+	protected String error;
 
 	protected boolean isValidUser() {
 		AuthUser authUser = SessionContainer.getUser(request.getSession());
@@ -46,5 +46,10 @@ abstract public class BaseController implements ServletRequestAware {
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
+	
+	/*
+	 * this method needs to be implemented in the top class, because of a bug in Struts2
+	 */
+	abstract public String getError();
 	
 }
