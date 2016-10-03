@@ -109,7 +109,7 @@ public class HourController extends BaseController {
 		
 		// check if project exists and logged in user is its owner
 		Hour dbHour = dao.getHour(hour.id);
-		if (dbHour == null || dbHour.projectId != hour.projectId) {
+		if (dbHour == null || !dbHour.projectId.equals(hour.projectId)) {
 			error = "Project does not exist";
 			return ERROR;
 		}	
