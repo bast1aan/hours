@@ -298,7 +298,7 @@ public class Dao {
 	}
 	
 	public void create(Hour hour) {
-		final String query = "INSERT INTO hours (description, project_id, start, end) VALUES (?, ?, ?, ?)";
+		final String query = "INSERT INTO hours (description, project_id, start, \"end\") VALUES (?, ?, ?, ?)";
 		try {
 			Integer projectId = hour.projectId;
 			if (projectId == null || projectId <= 0) {
@@ -333,7 +333,7 @@ public class Dao {
 		if (hour.id <= 0) {
 			throw new HoursException("id must be set");
 		}
-		final String query = "UPDATE hours SET description = ?, end = ? WHERE hour_id = ?";
+		final String query = "UPDATE hours SET description = ?, \"end\" = ? WHERE hour_id = ?";
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, hour.description);
