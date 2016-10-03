@@ -269,6 +269,99 @@ public class Dao {
 		}
 
 	}
+
+	public List<Hour> getHoursByProject(Project project) {
+		return getHoursByProject(project, null);
+	}
+	
+	public List<Hour> getHoursByProject(Project project, Integer limit) {
+		
+		List<Hour> hours = new ArrayList<Hour>();
+		String query = "SELECT * FROM hours WHERE project_id = ? ORDER BY hour_id DESC";
+		if (limit != null) {
+			query += " LIMIT " + limit;
+		}
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setInt(1, project.id);
+			ResultSet result = stmt.executeQuery();
+			while (result.next()) {
+				Hour hour = new Hour();
+				populate(hour, result);
+				hour.project = project;
+				hours.add(hour);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		return hours;
+	}
+	
+	public void create(Hour hour) {
+		final String query = "INSERT INTO hours (description, project_id, start, \"end\") VALUES (?, ?, ?, ?)";
+		try {
+			Integer projectId = hour.projectId;
+			if (projectId == null || projectId <= 0) {
+				if (hour.project == null || hour.project.id == null || hour.project.id <= 0 ) {
+					throw new HoursException("In Dao.create(Hour) : both projectId and project not set");
+				}
+				projectId = hour.project.id;
+			}
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, hour.description);
+			stmt.setInt(2, projectId);
+			stmt.setTimestamp(3, hour.start != null ? new java.sql.Timestamp(hour.start.getTime()) : null);
+			stmt.setTimestamp(4, hour.end != null ? new java.sql.Timestamp(hour.end.getTime()) : null);
+			
+			int affected = stmt.executeUpdate();
+			
+			if (affected != 0) {
+				// set genereated primary key on project object
+				ResultSet keys = stmt.getGeneratedKeys();
+				if (keys.next()) {
+					hour.id = keys.getInt(1);
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		
+	}
+
+	public void update(Hour hour) {
+		if (hour.id <= 0) {
+			throw new HoursException("id must be set");
+		}
+		final String query = "UPDATE hours SET description = ?, \"end\" = ? WHERE hour_id = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setString(1, hour.description);
+			stmt.setTimestamp(2, hour.end != null ? new java.sql.Timestamp(hour.end.getTime()) : null);
+			stmt.setInt(3, hour.id);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+	}
+	
+	public Hour getHour(int id) {
+		Hour hour = null;
+		final String query = "SELECT * FROM hours WHERE hour_id = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setInt(1, id);
+			ResultSet result = stmt.executeQuery();
+			while (result.next()) {
+				hour = new Hour();
+				populate(hour, result);
+			}
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+		return hour;
+		
+	}
 	
 	private void populateUser(AuthUser user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
@@ -289,6 +382,14 @@ public class Dao {
 		project.id = result.getInt("project_id");
 		project.name = result.getString("project_name");
 		project.username = result.getString("username");
+	}
+	
+	private void populate(Hour hour, ResultSet result) throws SQLException {
+		hour.id = result.getInt("hour_id");
+		hour.description = result.getString("description");
+		hour.projectId = result.getInt("project_id");
+		hour.start = result.getTimestamp("start");
+		hour.end = result.getTimestamp("end");
 	}
 
 }
