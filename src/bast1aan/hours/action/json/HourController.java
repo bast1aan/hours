@@ -120,6 +120,9 @@ public class HourController extends BaseController {
 	}
 	
 	private Project getProject() {
+		if (projectId == null)
+			return null;
+		
 		Project project = dao.getProject(projectId);
 		if (project == null || project.username == null || !project.username.equals(user.username)) {
 			return null;
