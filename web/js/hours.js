@@ -24,6 +24,9 @@ var baseUrl;
 
 var projectListHtml = loadTemplate("js/templates/projectlist.html");
 
+var errorGoToLoginHtml = loadTemplate("js/templates/error-go-to-login.html");
+var errorGoToLoginElement;
+
 var Project = Backbone.Model.extend( {
 	defaults: {
 		id: 0,
@@ -127,7 +130,7 @@ var ProjectListView = Backbone.View.extend({
 				e.currentTarget.removeChild(input);
 				view.render();
 			}
-		})
+		});
 		e.currentTarget.innerHTML = '';
 		e.currentTarget.appendChild(input);
 		input.focus();
@@ -177,6 +180,24 @@ var listView = new ProjectListView({collection: projects});
 $(document).ready(function() {
 	username = Cookies.get('hours_username');
 	baseUrl = Cookies.get('hours_base_url');
+
+	// preload error dialogs into dom
+	var errorDiv = document.createElement('div');
+	$(errorDiv).html(_.template(errorGoToLoginHtml, {loginUrl : baseUrl + "/login.jsp"}));
+	$('#application').append(errorDiv);
+	$(errorDiv).ready(function() {
+		errorGoToLoginElement = errorDiv.childNodes[0];
+		$(errorGoToLoginElement).dialog({
+			autoOpen: false,
+			modal: true,
+			buttons: {
+				Ok: function () {
+					$(this).dialog("close");
+				}
+			}
+		});
+	});
+
 	if (username) {
 		$('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a>');
 		$('#application').append(listView.$el);
@@ -216,16 +237,21 @@ function doRequest(params) {
 
 	if (!params['error']) {
 		params['error'] = function(jqHXR, textStatus, e) {
-			var errorMessage = "Error executing request to backend:\nURL: "
-				+ params['url'] + "\nMethod: " + params['type'] + "\n\n";
+			if (jqHXR.status && jqHXR.status == 403) {
+				$(errorGoToLoginElement).dialog('open');
+			} else {
 
-			if (jqHXR.status && jqHXR.statusText)
-				errorMessage += "Status: " + jqHXR.status + " " + jqHXR.statusText + "\n";
+				var errorMessage = "Error executing request to backend:\nURL: "
+					+ params['url'] + "\nMethod: " + params['type'] + "\n\n";
 
-			if (jqHXR.responseJSON && jqHXR.responseJSON['error'])
-				errorMessage += "Message: " + jqHXR.responseJSON['error']+ "\n";
+				if (jqHXR.status && jqHXR.statusText)
+					errorMessage += "Status: " + jqHXR.status + " " + jqHXR.statusText + "\n";
 
-			alert(errorMessage);
+				if (jqHXR.responseJSON && jqHXR.responseJSON['error'])
+					errorMessage += "Message: " + jqHXR.responseJSON['error'] + "\n";
+
+				alert(errorMessage);
+			}
 		}
 	}
 
