@@ -328,6 +328,22 @@ public class Dao {
 		}
 		
 	}
+
+	public void update(Hour hour) {
+		if (hour.id <= 0) {
+			throw new HoursException("id must be set");
+		}
+		final String query = "UPDATE hours SET description = ?, end = ? WHERE hour_id = ?";
+		try {
+			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
+			stmt.setString(1, hour.description);
+			stmt.setDate(2, hour.end);
+			stmt.setInt(3, hour.id);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new HoursException("Error executing query", e);
+		}
+	}
 	
 	private void populateUser(AuthUser user, ResultSet result) throws SQLException {
 		user.username = result.getString("username");
