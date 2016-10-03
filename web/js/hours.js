@@ -36,40 +36,22 @@ var ProjectsCollection = Backbone.Collection.extend({model : Project});
 var projects = new ProjectsCollection();
 
 function retrieveProjects(username) {
-	var url = "/projects/list?username=" + username;
-	if (baseUrl) {
-		url = baseUrl + url;
-	}
-	$.ajax({
-		url : url,
-		cache : false,
+	doRequest({
+		url : "/projects/list?username=" + username,
 		type : 'GET',
-		dataType : 'json',
-		crossDomain : true,
-		success : function(data){
+		success : function(data) {
 			if (data.projects) {
 					projects.reset(data.projects);
 			}
-		},
-		error : function(jqHXR, textStatus, e) {
-			throw "Error executing request: " + textStatus + " : " + e;
 		}
 	});
 }
 
 function deleteProject(id, view) {
-	var url = "/projects/delete?username=" + username;
-	if (baseUrl) {
-		url = baseUrl + url;
-	}
-	$.ajax({
-		url : url,
-		cache : false,
+	doRequest({
+		url : "/projects/delete?username=" + username,
 		type : 'DELETE',
-		dataType : 'json',
-		crossDomain : true,
-		data : JSON.stringify({username : username, project : { id : id }}),
-		contentType : 'application/json',
+		data : { username : username, project : { id : id }},
 		success : function() {
 			if (view) {
 				view.collection.remove(id);
@@ -80,18 +62,10 @@ function deleteProject(id, view) {
 }
 
 function renameProject(id, name, view) {
-	var url = "/projects/update?username=" + username;
-	if (baseUrl) {
-		url = baseUrl + url;
-	}
-	$.ajax({
-		url : url,
-		cache : false,
+	doRequest({
+		url : "/projects/update?username=" + username,
 		type : 'PUT',
-		dataType : 'json',
-		crossDomain : true,
-		data : JSON.stringify({username : username, project : { id : id, name : name }}),
-		contentType : 'application/json',
+		data : { username : username, project : { id : id, name : name } },
 		success : function() {
 			if (view) {
 				view.collection.get(id).set('name', name);
@@ -99,22 +73,13 @@ function renameProject(id, name, view) {
 			}
 		}
 	});
-
 }
 
 function newProject(name, view) {
-	var url = "/projects/save?username=" + username;
-	if (baseUrl) {
-		url = baseUrl + url;
-	}
-	$.ajax({
-		url : url,
-		cache : false,
+	doRequest({
+		url : "/projects/save?username=" + username,
 		type : 'POST',
-		dataType : 'json',
-		crossDomain : true,
-		data : JSON.stringify({username : username, project : { name : name }}),
-		contentType : 'application/json',
+		data : { username : username, project : { name : name } },
 		success : function(data) {
 			if (view && data.project) {
 				view.collection.add(data.project);
@@ -122,7 +87,6 @@ function newProject(name, view) {
 			}
 		}
 	});
-
 }
 
 var ProjectListView = Backbone.View.extend({
@@ -231,4 +195,24 @@ function loadTemplate(url) {
 		success: function(data) { tplString = data; }
 	});
 	return tplString;
+}
+
+function doRequest(params) {
+
+	if (baseUrl) {
+		params['url'] = baseUrl + params['url'];
+	}
+	if (!params['type'])
+		params['type'] = 'GET';
+
+	params['cache'] = false;
+	params['dataType'] = 'json';
+	params['crossDomain'] = true;
+
+	if (!!params['data'] && params['type'] != 'GET') {
+		params['data'] = JSON.stringify(params['data']);
+		params['contentType'] = 'application/json';
+	}
+
+	$.ajax(params);
 }
