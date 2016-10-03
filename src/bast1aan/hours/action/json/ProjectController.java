@@ -19,29 +19,18 @@ package bast1aan.hours.action.json;
 
 import bast1aan.hours.Dao;
 import bast1aan.hours.Project;
-import bast1aan.hours.SessionContainer;
-import bast1aan.hours.AuthUser;
-import bast1aan.hours.User;
-import bast1aan.hours.UserTools;
 import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.LOGIN;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.struts2.interceptor.ServletRequestAware;
 
-public class ProjectController implements ServletRequestAware {
+public class ProjectController extends BaseController {
 
-	@Setter private String username;
 	@Getter private List<Project> projects;
-	@Getter private String error;
 	@Setter @Getter private Project project;
-	private User user;
-		
-	private HttpServletRequest request;
-	
+
 	public String listAction() throws Exception {
 		if (!isValidUser()) {
 			return LOGIN;
@@ -137,21 +126,6 @@ public class ProjectController implements ServletRequestAware {
 		}
 		dao.deleteProject(dbProject);
 		return SUCCESS;
-	}
-	
-	private boolean isValidUser() {
-		AuthUser authUser = SessionContainer.getUser(request.getSession());
-		if (authUser == null || username == null || ! authUser.username.equals(username)) {
-			error = "Invalid user";
-			return false;
-		}
-		user = UserTools.userWithoutPrivateData(authUser);
-		return true;
-	}
-	
-	@Override
-	public void setServletRequest(HttpServletRequest hsr) {
-		this.request = hsr;
 	}
 
 }
