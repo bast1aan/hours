@@ -34,11 +34,27 @@ var errorGoToLoginElement;
 var Project = Backbone.Model.extend( {
 	defaults: {
 		id: 0,
-		name: ''
+		name: '',
+		hours: []
 	}
 });
 
 var ProjectsCollection = Backbone.Collection.extend({model : Project});
+
+var Hour = Backbone.Model.extend({
+	defaults: {
+		id: 0,
+		description: '',
+		projectId: 0,
+		start: null,
+		end: null
+	},
+	initialize : function() {
+		this.set('start', new Date());
+	}
+});
+
+var HoursCollection = Backbone.Collection.extend({model : Hour});
 
 function retrieveProjects(username, view) {
 	doRequest({
