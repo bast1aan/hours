@@ -32,3 +32,20 @@ var MainView = Backbone.View.extend({
 	},
 });
 
+$(document).ready(function() {
+	var projects = new ProjectsCollection();
+
+	var mainView = new MainView({collection: projects});
+
+	$('#application').append(mainView.$el);
+
+	retrieveProjects(username, mainView);
+
+	mainView.collection.on("reset", function() {
+		mainView.collection.each(function(project) {
+			getHours(project);
+			// TODO should actually be done only once after all projects are rendered
+			project.on('change', function() {mainView.render();});
+		});
+	});
+});
