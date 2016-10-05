@@ -110,6 +110,18 @@ function newProject(name, view) {
 	});
 }
 
+function getHours(project) {
+	doRequest({
+		url : "/hours/list?username=" + username + "&projectId=" + project.id,
+		type : 'GET',
+		success : function(data) {
+			if (data.hours) {
+				project.set({hours : new HoursCollection(data.hours)});
+			}
+		}
+	});
+}
+
 $(document).ready(function() {
 	username = Cookies.get('hours_username');
 	baseUrl = Cookies.get('hours_base_url');
