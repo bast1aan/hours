@@ -39,7 +39,55 @@ var Project = Backbone.Model.extend( {
 	}
 });
 
-var ProjectsCollection = Backbone.Collection.extend({model : Project});
+var ProjectsCollection = Backbone.Collection.extend({
+	model : Project,
+	getRunning : function() {
+		if (!this._running || !this._running instanceof ProjectsCollection) {
+			this._running = new ProjectsCollection();
+			for (var i = 0; i < this.length; ++i) {
+				var project = this.at(i);
+				var hours = project.get('hours');
+				var open = false;
+				for (var j = 0; j < hours.length; ++j) {
+					var hour = hours.at(j);
+					if (hour.get('end') == null) {
+						open = true;
+						break;
+					}
+				}
+				if (open) {
+					this._running.add(project);
+				}
+			}
+			var collection = this;
+			this.on("change", function() {collection._running = null});
+		}
+		return this._running;
+	},
+	getOther : function() {
+		if (!this._other || !this._other instanceof ProjectsCollection) {
+			this._other = new ProjectsCollection();
+			var collection = this;
+			for(var i = 0; i < this.length; ++i) {
+				var project = this.at(i);
+				var hours = project.get('hours');
+				var closed = true;
+				for (var j = 0; j < hours.length; ++j) {
+					var hour = hours.at(j);
+					if (hour.get('end') == null) {
+						closed = false;
+						break;
+					}
+				}
+				if (closed) {
+					this._other.add(project);
+				}
+			}
+			this.on("change", function() {collection._other = null;});
+		}
+		return this._other;
+	}
+});
 
 var Hour = Backbone.Model.extend({
 	defaults: {
