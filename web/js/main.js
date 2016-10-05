@@ -19,3 +19,16 @@
 /**
  * javascript for the main page
  */
+
+var mainHtml = loadTemplate("js/templates/main.html");
+
+var MainView = Backbone.View.extend({
+	initialize: function () {
+		this.listenTo(this.collection, "reset", this.render);
+	},
+	render: function () {
+		this.$el.html(_.template(mainHtml, {projects: this.collection}));
+		return this;
+	},
+});
+
