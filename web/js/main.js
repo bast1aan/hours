@@ -33,6 +33,27 @@ var MainView = Backbone.View.extend({
 	},
 });
 
+var DialogProjectStartView = Backbone.View.extend({
+	render: function () {
+		var view = this;
+		var $el = this.$el;
+		$el.html(_.template(dialogProjectStartHtml, {project: this.model.project, hour: this.model.hour}));
+		$el.attr('title', 'Start project');
+		$el.ready(function() {
+			$el.dialog({
+				modal: true,
+				buttons: {
+					Cancel: function () {
+						$(this).dialog("close");
+						view.remove()
+					}
+				}
+			});
+		});
+		return this;
+	},
+});
+
 $(document).ready(function() {
 	var projects = new ProjectsCollection();
 
