@@ -21,6 +21,7 @@
  */
 
 var mainHtml = loadTemplate("js/templates/main.html");
+var dialogProjectStartHtml = loadTemplate("js/templates/dialog-project-start.html");
 
 var MainView = Backbone.View.extend({
 	initialize: function () {
