@@ -41,6 +41,7 @@ var MainView = Backbone.View.extend({
 		var project = this.getProjectById(projectId);
 		if (project) {
 			var hour = new Hour();
+			hour.set('start', new Date());
 			hour.set('projectId', projectId);
 			var model = {
 				hour: hour,

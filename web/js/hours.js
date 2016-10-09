@@ -97,9 +97,14 @@ var Hour = Backbone.Model.extend({
 		start: null,
 		end: null
 	},
+	/* initialize doesn't work properly.
+	   we want the start field only be set if it's not set from the construct call
+
 	initialize : function() {
-		this.set('start', new Date());
+		if (!this.has('start'))
+			this.set('start', new Date());
 	}
+	*/
 });
 
 var HoursCollection = Backbone.Collection.extend({model : Hour});
