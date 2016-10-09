@@ -170,6 +170,19 @@ function getHours(project) {
 	});
 }
 
+function newHour(hour) {
+	doRequest({
+		url : "/hours/create?username=" + username + "&projectId=" + hour.get('projectId'),
+		type : 'POST',
+		data : { username : username, hour : hour },
+		success : function(data) {
+			if (data.hour) {
+				hour.set(data.hour);
+			}
+		}
+	});
+}
+
 $(document).ready(function() {
 	username = Cookies.get('hours_username');
 	baseUrl = Cookies.get('hours_base_url');
