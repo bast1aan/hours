@@ -22,6 +22,7 @@
 
 var mainHtml = loadTemplate("js/templates/main.html");
 var dialogProjectStartHtml = loadTemplate("js/templates/dialog-project-start.html");
+var dialogProjectEndHtml = loadTemplate("js/templates/dialog-project-end.html");
 
 var MainView = Backbone.View.extend({
 	initialize: function () {
@@ -107,6 +108,57 @@ var DialogProjectStartView = Backbone.View.extend({
 	}
 
 });
+
+var DialogProjectEndView = Backbone.View.extend({
+	render: function () {
+		var view = this;
+		var $el = this.$el;
+		$el.html(_.template(dialogProjectEndHtml, {project: this.model.project, hour: this.model.hour}));
+		$el.attr('title', 'End project');
+		$el.ready(function() {
+			$el.dialog({
+				modal: true,
+				buttons: {
+					End: function () {
+						$el.find('form').submit();
+					},
+					Cancel: function () {
+						$(this).dialog("close");
+						view.remove()
+					}
+				}
+			});
+		});
+		return this;
+	},
+	events : {
+		'submit #dialog-project-end-form' : 'submit'
+	},
+	submit : function(event) {
+		var $descriptionElement = this.$el.find('form input[name="description"]');
+		var $startElement = this.$el.find('form input[name="start"]');
+		var $endElement = this.$el.find('form input[name="end"]');
+		var startDate = parseStrToDate($startElement.val());
+		if (!startDate) {
+			alert('Invalid start timestamp given');
+			return false;
+		}
+		var endDate = parseStrToDate($endElement.val());
+		if (!startDate) {
+			alert('Invalid end timestamp given');
+			return false;
+		}
+		this.model.hour.set('description', $descriptionElement.val());
+		this.model.hour.set('start', startDate);
+		this.model.hour.set('end', endDate);
+		this.model.submit();
+		this.$el.dialog("close");
+		this.$el.remove();
+		return false;
+	}
+
+});
+
 
 $(document).ready(function() {
 	var projects = new ProjectsCollection();

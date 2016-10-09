@@ -1,0 +1,11 @@
+<h2><%= project.get('name') %></h2>
+<form id="dialog-project-end-form">
+	<dl>
+		<dt>Description</dt>
+		<dd><input type="text" name="description" value="<%= hour.get('description') %>" /></dd>
+		<dt>Start timestamp</dt>
+		<dd><input type="text" name="start" value="<%= dateToStr(hour.get('start')) %>" /></dd>
+		<dt>End timestamp</dt>
+		<dd><input type="text" name="end" value="<%= dateToStr(hour.get('end')) %>" /></dd>
+	</dl>
+</form>
