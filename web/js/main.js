@@ -31,6 +31,14 @@ var MainView = Backbone.View.extend({
 		this.$el.html(_.template(mainHtml, {projects: this.collection}));
 		return this;
 	},
+	getProjectById : function(projectId) {
+		for (var i = 0; i < this.collection.length; ++i) {
+			var project = this.collection.at(i);
+			if (project.id == projectId) {
+				return project;
+			}
+		}
+	}
 });
 
 var DialogProjectStartView = Backbone.View.extend({
