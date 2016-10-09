@@ -35,3 +35,13 @@ span.error {
 	color: red;
 }
 
+#application ul#running-projects,
+#application ul#other-projects {
+	display:block;
+	background-color: #ddd;
+	border-radius: 7px;
+	font-size: 120%;
+	margin-bottom: 10px;
+	padding: 15px;
+}
+
