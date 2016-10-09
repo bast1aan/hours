@@ -31,6 +31,29 @@ var MainView = Backbone.View.extend({
 		this.$el.html(_.template(mainHtml, {projects: this.collection}));
 		return this;
 	},
+	events : {
+		"dblclick .start_project" : "startProject",
+	},
+	startProject : function(event) {
+		var view = this;
+		var projectId = $(event.currentTarget).data('id');
+		var project = this.getProjectById(projectId);
+		if (project) {
+			var hour = new Hour();
+			hour.set('projectId', projectId);
+			var model = {
+				hour: hour,
+				project: project,
+				submit: function() {
+					newHour(this.hour);
+					project.get('hours').add(this.hour);
+					view.render();
+				}
+			};
+			var dialog = new DialogProjectStartView({model: model});
+			dialog.render();
+		}
+	},
 	getProjectById : function(projectId) {
 		for (var i = 0; i < this.collection.length; ++i) {
 			var project = this.collection.at(i);
