@@ -43,6 +43,9 @@ var DialogProjectStartView = Backbone.View.extend({
 			$el.dialog({
 				modal: true,
 				buttons: {
+					Start: function () {
+						$el.find('form').submit();
+					},
 					Cancel: function () {
 						$(this).dialog("close");
 						view.remove()
@@ -52,6 +55,26 @@ var DialogProjectStartView = Backbone.View.extend({
 		});
 		return this;
 	},
+	events : {
+		'submit #dialog-project-start-form' : 'submit'
+	},
+	submit : function(event) {
+		var $descriptionElement = this.$el.find('form input[name="description"]');
+		var $timestampElement = this.$el.find('form input[name="timestamp"]');
+		var startDate = parseStrToDate($timestampElement.val());
+		if (!startDate) {
+			alert('Invalid timestamp given');
+			return false;
+		}
+		this.model.hour.set('description', $descriptionElement.val());
+		this.model.hour.set('start', startDate);
+		this.model.submit();
+		this.$el.dialog("close");
+		this.$el.remove();
+		return false;
+
+	}
+
 });
 
 $(document).ready(function() {
