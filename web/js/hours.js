@@ -97,6 +97,20 @@ var Hour = Backbone.Model.extend({
 		start: null,
 		end: null
 	},
+	set : function(key, val, options) {
+		if (typeof key === 'object') {
+			for (var property in key) {
+				if ((property == 'start' || property == 'end') && typeof key[property] == 'string') {
+					key[property] = new Date(key[property]);
+				}
+			}
+		} else {
+			if ((key == 'start' || key == 'end') && typeof val == 'string') {
+				val = new Date(val);
+			}
+		}
+		return Backbone.Model.prototype.set.call(this, key, val, options);
+	},
 	/* initialize doesn't work properly.
 	   we want the start field only be set if it's not set from the construct call
 
