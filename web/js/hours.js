@@ -101,12 +101,14 @@ var Hour = Backbone.Model.extend({
 		if (typeof key === 'object') {
 			for (var property in key) {
 				if ((property == 'start' || property == 'end') && typeof key[property] == 'string') {
-					key[property] = new Date(key[property]);
+					// TODO check if timestamp is in UTC. It is currently the case with the struts2 json backend.
+					key[property] = new Date(key[property] + 'Z');
 				}
 			}
 		} else {
 			if ((key == 'start' || key == 'end') && typeof val == 'string') {
-				val = new Date(val);
+				// TODO check if timestamp is in UTC. It is currently the case with the struts2 json backend.
+				val = new Date(val + 'Z');
 			}
 		}
 		return Backbone.Model.prototype.set.call(this, key, val, options);
