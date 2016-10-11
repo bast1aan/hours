@@ -47,6 +47,8 @@ CREATE TABLE users_newpassword
 	CONSTRAINT users_newpassword_users FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION one_hour_open_per_project()
 	RETURNS trigger AS
 $$
