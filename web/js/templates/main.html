@@ -8,7 +8,7 @@
 	%>
 	<li id="running_project<%= project.get('id') %>">
 		<h3 class="name" data-id="<%= project.get('id') %>"><%= project.get('name') %></h3>
-		Started <%= dateToStr(hour.get('start')) %> <% if (description) { %> with <quote><%=description%></quote> <% } %> <button class="end" data-id="<%= project.get('id') %>">End</button>
+		Started <span class="date"><%= dateToStr(hour.get('start')) %></span> <% if (description) { %> with <span class="description"><%=description%></span> <% } %> <button class="end" data-id="<%= project.get('id') %>">End</button>
 	</li>
 <% }); %>
 </ul>
