@@ -63,6 +63,14 @@ var MainView = Backbone.View.extend({
 				return project;
 			}
 		}
+	},
+	getOpenHourOfProject : function(project) {
+		var hours = project.get('hours');
+		for (var i = 0; i < hours.length; ++i) {
+			var hour = hours.at(i);
+			if (!hour.get('end'))
+				return hour;
+		}
 	}
 });
 
