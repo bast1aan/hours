@@ -2,9 +2,13 @@
 <% if (projects && projects.length > 0) { %>
 <h2 class="running-projects">Running projects</h2>
 <ul id="running-projects" class="running-projects">
-<% projects.getRunning().each(function(project) { %>
+<% projects.getRunning().each(function(project) {
+	var hour = getOpenHourOfProject(project);
+	var description = hour.get('description');
+	%>
 	<li id="running_project<%= project.get('id') %>">
-		<h3 class="name" data-id="<%= project.get('id') %>"><%= project.get('name') %></h3> <button class="end" data-id="<%= project.get('id') %>">End</button>
+		<h3 class="name" data-id="<%= project.get('id') %>"><%= project.get('name') %></h3>
+		Started <%= dateToStr(hour.get('start')) %> <% if (description) { %> with <quote><%=description%></quote> <% } %> <button class="end" data-id="<%= project.get('id') %>">End</button>
 	</li>
 <% }); %>
 </ul>

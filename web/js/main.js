@@ -29,7 +29,7 @@ var MainView = Backbone.View.extend({
 		this.listenTo(this.collection, "reset", this.render);
 	},
 	render: function () {
-		this.$el.html(_.template(mainHtml, {projects: this.collection}));
+		this.$el.html(_.template(mainHtml, {projects: this.collection, getOpenHourOfProject : this.getOpenHourOfProject }));
 		return this;
 	},
 	events : {
