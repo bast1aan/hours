@@ -77,3 +77,10 @@ CREATE CONSTRAINT TRIGGER hours_one_open_per_project
 ALTER TABLE hours
   ADD CONSTRAINT hours_end_gt_start
   CHECK ("end" > start);
+
+ALTER TABLE users
+   ALTER COLUMN password DROP NOT NULL;
+
+ALTER TABLE users
+   ALTER COLUMN password DROP NOT NULL;
+
