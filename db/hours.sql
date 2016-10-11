@@ -46,3 +46,28 @@ CREATE TABLE users_newpassword
 	CONSTRAINT users_newpassword_pk PRIMARY KEY (confirmcode), 
 	CONSTRAINT users_newpassword_users FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE OR REPLACE FUNCTION one_hour_open_per_project()
+	RETURNS trigger AS
+$$
+DECLARE
+	cnt integer;
+BEGIN
+	IF NEW."end" IS NULL THEN
+		SELECT COUNT(*) INTO cnt
+			FROM hours h
+			WHERE h.project_id = NEW.project_id AND h."end" IS NULL;
+		IF cnt > 1 THEN
+			RAISE EXCEPTION 'Only one hour may be open per project';
+		END IF;
+	END IF;
+	RETURN NULL;
+END;
+$$
+	LANGUAGE plpgsql;
+
+CREATE CONSTRAINT TRIGGER hours_one_open_per_project
+	AFTER INSERT OR UPDATE
+	ON hours
+	FOR EACH ROW
+	EXECUTE PROCEDURE one_hour_open_per_project();
