@@ -19,9 +19,9 @@ how to build and run
 
 Requirements:
 
-* java-openjdk 7 or higher
+* java-openjdk 6 or higher
 * java-openjdk-devel
-* tomcat 7 or higher to run the application  
+* tomcat 6 or higher to run the application  
   another servlet engine implementing servlet api 2.5 or higher
   should work as well (not tested)
 * database engine working with JDBC. I use postgresql for this.
