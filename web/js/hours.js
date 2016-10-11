@@ -204,7 +204,7 @@ function newHour(hour) {
 	});
 }
 
-function updateHour(hour) {
+function updateHour(hour, success) {
 	doRequest({
 		url : "/hours/update?username=" + username + "&projectId=" + hour.get('projectId'),
 		type : 'PUT',
@@ -212,6 +212,8 @@ function updateHour(hour) {
 		success : function(data) {
 			if (data.hour) {
 				hour.set(data.hour);
+				if (typeof success == 'function')
+					success();
 			}
 		}
 	});
