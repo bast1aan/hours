@@ -1,0 +1,23 @@
+<h1>Hours</h1>
+<% if (projects && projects.length > 0) { %>
+<h2 class="running-projects">Running projects</h2>
+<ul id="running-projects" class="running-projects">
+<% projects.getRunning().each(function(project) {
+	var hour = getOpenHourOfProject(project);
+	var description = hour.get('description');
+	%>
+	<li id="running_project<%= project.get('id') %>">
+		<h3 class="name" data-id="<%= project.get('id') %>"><%= project.get('name') %></h3>
+		Started <span class="date"><%= dateToStr(hour.get('start')) %></span> <% if (description) { %> with <span class="description"><%=description%></span> <% } %> <button class="end" data-id="<%= project.get('id') %>">End</button>
+	</li>
+<% }); %>
+</ul>
+<h2 class="other-projects">Tap a project to start with</h2>
+<ul class="other-projects" id="other-projects">
+<% projects.getOther().each(function(project) { %>
+	<li id="other_project<%= project.get('id') %>">
+		<h3 class="start_project" data-id="<%= project.get('id') %>"><%= project.get('name') %></h3>
+	</li>
+<% }); %>
+</ul>
+<% } %>

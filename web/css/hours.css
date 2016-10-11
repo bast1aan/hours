@@ -35,3 +35,34 @@ span.error {
 	color: red;
 }
 
+#application ul#running-projects {
+	list-style: none;
+}
+
+
+#application ul#running-projects li span.description {
+	font-style: italic;
+}
+
+#application ul#running-projects li span.description:before {
+	content: open-quote;
+}
+
+#application ul#running-projects li span.description:after {
+	content: close-quote;
+}
+
+#application ul#running-projects li span.date {
+	font-weight: bold;
+}
+
+#application ul#running-projects li,
+#application ul#other-projects li {
+	display:block;
+	background-color: #ddd;
+	border-radius: 7px;
+	font-size: 120%;
+	margin-bottom: 10px;
+	padding: 15px;
+}
+

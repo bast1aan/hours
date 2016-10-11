@@ -34,11 +34,96 @@ var errorGoToLoginElement;
 var Project = Backbone.Model.extend( {
 	defaults: {
 		id: 0,
-		name: ''
+		name: '',
+		hours: []
 	}
 });
 
-var ProjectsCollection = Backbone.Collection.extend({model : Project});
+var ProjectsCollection = Backbone.Collection.extend({
+	model : Project,
+	getRunning : function() {
+		if (!this._running || !this._running instanceof ProjectsCollection) {
+			this._running = new ProjectsCollection();
+			for (var i = 0; i < this.length; ++i) {
+				var project = this.at(i);
+				var hours = project.get('hours');
+				var open = false;
+				for (var j = 0; j < hours.length; ++j) {
+					var hour = hours.at(j);
+					if (hour.get('end') == null) {
+						open = true;
+						break;
+					}
+				}
+				if (open) {
+					this._running.add(project);
+				}
+			}
+			var collection = this;
+			this.on("change", function() {collection._running = null});
+		}
+		return this._running;
+	},
+	getOther : function() {
+		if (!this._other || !this._other instanceof ProjectsCollection) {
+			this._other = new ProjectsCollection();
+			var collection = this;
+			for(var i = 0; i < this.length; ++i) {
+				var project = this.at(i);
+				var hours = project.get('hours');
+				var closed = true;
+				for (var j = 0; j < hours.length; ++j) {
+					var hour = hours.at(j);
+					if (hour.get('end') == null) {
+						closed = false;
+						break;
+					}
+				}
+				if (closed) {
+					this._other.add(project);
+				}
+			}
+			this.on("change", function() {collection._other = null;});
+		}
+		return this._other;
+	}
+});
+
+var Hour = Backbone.Model.extend({
+	defaults: {
+		id: 0,
+		description: '',
+		projectId: 0,
+		start: null,
+		end: null
+	},
+	set : function(key, val, options) {
+		if (typeof key === 'object') {
+			for (var property in key) {
+				if ((property == 'start' || property == 'end') && typeof key[property] == 'string') {
+					// TODO check if timestamp is in UTC. It is currently the case with the struts2 json backend.
+					key[property] = new Date(key[property] + 'Z');
+				}
+			}
+		} else {
+			if ((key == 'start' || key == 'end') && typeof val == 'string') {
+				// TODO check if timestamp is in UTC. It is currently the case with the struts2 json backend.
+				val = new Date(val + 'Z');
+			}
+		}
+		return Backbone.Model.prototype.set.call(this, key, val, options);
+	},
+	/* initialize doesn't work properly.
+	   we want the start field only be set if it's not set from the construct call
+
+	initialize : function() {
+		if (!this.has('start'))
+			this.set('start', new Date());
+	}
+	*/
+});
+
+var HoursCollection = Backbone.Collection.extend({model : Hour});
 
 function retrieveProjects(username, view) {
 	doRequest({
@@ -94,6 +179,47 @@ function newProject(name, view) {
 	});
 }
 
+function getHours(project) {
+	doRequest({
+		url : "/hours/list?username=" + username + "&projectId=" + project.id,
+		type : 'GET',
+		success : function(data) {
+			if (data.hours) {
+				project.set({hours : new HoursCollection(data.hours)});
+			}
+		}
+	});
+}
+
+function newHour(hour) {
+	doRequest({
+		url : "/hours/create?username=" + username + "&projectId=" + hour.get('projectId'),
+		type : 'POST',
+		data : { username : username, hour : hour },
+		success : function(data) {
+			if (data.hour) {
+				hour.set(data.hour);
+			}
+		}
+	});
+}
+
+function updateHour(hour, success) {
+	doRequest({
+		url : "/hours/update?username=" + username + "&projectId=" + hour.get('projectId'),
+		type : 'PUT',
+		data : { username : username, hour : hour },
+		success : function(data) {
+			if (data.hour) {
+				hour.set(data.hour);
+				if (typeof success == 'function')
+					success();
+			}
+		}
+	});
+}
+
+
 $(document).ready(function() {
 	username = Cookies.get('hours_username');
 	baseUrl = Cookies.get('hours_base_url');
@@ -116,7 +242,7 @@ $(document).ready(function() {
 	});
 
 	if (username) {
-		$('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a>');
+		$('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a> | <a href="hours.html">Main</a> | <a href="projects.html">Manage projects…</a>');
 	} else {
 		$('#loginbar').html('Not logged in. <a href="login.jsp">Login</a>');
 	}
