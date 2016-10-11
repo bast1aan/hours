@@ -33,14 +33,14 @@ ant resolve task in build.xml and ivy.xml
 
 How to build:
 
-* Create the tables in your database engine with the SQL scripts
-  in the directory db/
+* Create the tables in your database engine with the SQL script
+  hours.sql in the directory db/
 * Find a proper JDBC connector for the database engine you use.
   For postgresql see http://jdbc.postgresql.org/download.html
   Place the jar in the lib/ subdirectory.
 * create a new settings.properties in the src/ directory with
   information how to connect to the database. See 
-  settings-example.properties what is need.
+  settings-example.properties what is needed.
 
 Then use ant to resolve dependencies and build the project:
 
@@ -54,4 +54,13 @@ Then place the generated war file in the tomcat webapps directory:
 The application should then be available under
  http://localhost:8080/hours/ !
 
+To start using the application, create an initial user in the database:
+
+`INSERT INTO users(username, fullname, email)
+    VALUES ('john', 'John Doe', 'john@example.com');`
+
+then go to the access code page to generate a new code:
+ http://localhost:8080/hours/newcode.jsp
+the code will be send to you by email. With the link in the email
+you can set a new password and start using the application.
 
