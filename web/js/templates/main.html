@@ -15,8 +15,8 @@
 <h2 class="other-projects">Tap a project to start with</h2>
 <ul class="other-projects" id="other-projects">
 <% projects.getOther().each(function(project) { %>
-	<li id="other_project<%= project.get('id') %>">
-		<h3 class="start_project" data-id="<%= project.get('id') %>"><%= project.get('name') %></h3>
+	<li class="start_project" data-id="<%= project.get('id') %>" id="other_project<%= project.get('id') %>">
+		<h3><%= project.get('name') %></h3>
 	</li>
 <% }); %>
 </ul>

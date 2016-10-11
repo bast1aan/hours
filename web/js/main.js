@@ -33,7 +33,7 @@ var MainView = Backbone.View.extend({
 		return this;
 	},
 	events : {
-		"dblclick .start_project" : "startProject",
+		"click .start_project" : "startProject",
 		"click .end" : "endProject",
 	},
 	startProject : function(event) {
