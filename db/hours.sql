@@ -47,6 +47,8 @@ CREATE TABLE users_newpassword
 	CONSTRAINT users_newpassword_users FOREIGN KEY (username) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION one_hour_open_per_project()
 	RETURNS trigger AS
 $$
@@ -75,3 +77,10 @@ CREATE CONSTRAINT TRIGGER hours_one_open_per_project
 ALTER TABLE hours
   ADD CONSTRAINT hours_end_gt_start
   CHECK ("end" > start);
+
+ALTER TABLE users
+   ALTER COLUMN password DROP NOT NULL;
+
+ALTER TABLE users
+   ALTER COLUMN password DROP NOT NULL;
+
