@@ -242,7 +242,7 @@ $(document).ready(function() {
 	});
 
 	if (username) {
-		$('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a>');
+		$('#loginbar').html('Logged in as: ' + username + ' <a href="' + baseUrl + '/logout.action">Logout</a> | <a href="hours.html">Main</a> | <a href="projects.html">Manage projects…</a>');
 	} else {
 		$('#loginbar').html('Not logged in. <a href="login.jsp">Login</a>');
 	}
