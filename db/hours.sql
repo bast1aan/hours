@@ -71,3 +71,7 @@ CREATE CONSTRAINT TRIGGER hours_one_open_per_project
 	ON hours
 	FOR EACH ROW
 	EXECUTE PROCEDURE one_hour_open_per_project();
+
+ALTER TABLE hours
+  ADD CONSTRAINT hours_end_gt_start
+  CHECK ("end" > start);
