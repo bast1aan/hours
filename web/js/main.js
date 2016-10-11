@@ -34,6 +34,7 @@ var MainView = Backbone.View.extend({
 	},
 	events : {
 		"dblclick .start_project" : "startProject",
+		"click .end" : "endProject",
 	},
 	startProject : function(event) {
 		var view = this;
@@ -53,6 +54,26 @@ var MainView = Backbone.View.extend({
 				}
 			};
 			var dialog = new DialogProjectStartView({model: model});
+			dialog.render();
+		}
+	},
+	endProject : function(event) {
+		var view = this;
+		var projectId = $(event.currentTarget).data('id');
+		var project = this.getProjectById(projectId);
+		var hour;
+		if (project && (hour = this.getOpenHourOfProject(project))) {
+			// preset end date to now
+			hour.set('end', new Date());
+			var model = {
+				hour: hour,
+				project: project,
+				submit: function() {
+					updateHour(this.hour);
+					view.listenTo(this.hour, 'change', view.render);
+				}
+			};
+			var dialog = new DialogProjectEndView({model: model});
 			dialog.render();
 		}
 	},
