@@ -42,51 +42,44 @@ var Project = Backbone.Model.extend( {
 var ProjectsCollection = Backbone.Collection.extend({
 	model : Project,
 	getRunning : function() {
-		if (!this._running || !this._running instanceof ProjectsCollection) {
-			this._running = new ProjectsCollection();
-			for (var i = 0; i < this.length; ++i) {
-				var project = this.at(i);
-				var hours = project.get('hours');
-				var open = false;
-				for (var j = 0; j < hours.length; ++j) {
-					var hour = hours.at(j);
-					if (hour.get('end') == null) {
-						open = true;
-						break;
-					}
-				}
-				if (open) {
-					this._running.add(project);
+		var running = new ProjectsCollection();
+		for (var i = 0; i < this.length; ++i) {
+			var project = this.at(i);
+			var hours = project.get('hours');
+			var open = false;
+			for (var j = 0; j < hours.length; ++j) {
+				var hour = hours.at(j);
+				if (hour.get('end') == null) {
+					open = true;
+					break;
 				}
 			}
-			var collection = this;
-			this.on("change", function() {collection._running = null});
+			if (open) {
+				running.add(project);
+			}
 		}
-		return this._running;
+		return running;
 	},
 	getOther : function() {
-		if (!this._other || !this._other instanceof ProjectsCollection) {
-			this._other = new ProjectsCollection();
-			var collection = this;
-			for(var i = 0; i < this.length; ++i) {
-				var project = this.at(i);
-				var hours = project.get('hours');
-				var closed = true;
-				for (var j = 0; j < hours.length; ++j) {
-					var hour = hours.at(j);
-					if (hour.get('end') == null) {
-						closed = false;
-						break;
-					}
-				}
-				if (closed) {
-					this._other.add(project);
+		var other = new ProjectsCollection();
+		for(var i = 0; i < this.length; ++i) {
+			var project = this.at(i);
+			var hours = project.get('hours');
+			var closed = true;
+			for (var j = 0; j < hours.length; ++j) {
+				var hour = hours.at(j);
+				if (hour.get('end') == null) {
+					closed = false;
+					break;
 				}
 			}
-			this.on("change", function() {collection._other = null;});
+			if (closed) {
+				other.add(project);
+			}
 		}
-		return this._other;
-	}
+		
+		return other;
+	},
 });
 
 var Hour = Backbone.Model.extend({
