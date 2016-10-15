@@ -64,12 +64,16 @@ var MainView = Backbone.View.extend({
 		var hour;
 		if (project && (hour = this.getOpenHourOfProject(project))) {
 			// preset end date to now
-			hour.set('end', new Date());
+			var hourClone = hour.clone();
+			hourClone.set('end', new Date());
 			var model = {
-				hour: hour,
+				hour: hourClone,
 				project: project,
 				submit: function() {
-					updateHour(this.hour, function(){view.render();});
+					updateHour(this.hour, function() {
+						hour.set(hourClone.attributes);
+						view.render();
+					});
 				}
 			};
 			var dialog = new DialogProjectEndView({model: model});
