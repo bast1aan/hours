@@ -49,12 +49,15 @@ function parseStrToDate(str) {
 
 	var time = dateAndTime[1];
 	var timeParts = time.split(':');
-	if (timeParts.length != 3)
+	if (timeParts.length > 3 || timeParts.length < 2)
 		return;
 
 	var hour = timeParts[0];
 	var minute = timeParts[1];
-	var second = timeParts[2];
+
+	var second = 0;
+	if (timeParts.length == 3)
+		second = timeParts[2];
 
 	return new Date(year, month - 1, day, hour, minute, second);
 }
