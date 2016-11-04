@@ -2,11 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <jsp:useBean id="view" class="bast1aan.hours.action.OverviewAction$View" />
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Overview</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Hours - Overview</title>
+	<link href="css/hours.css" rel="stylesheet" />
 </head>
 <body>
 <h1>Overview</h1>
@@ -18,7 +19,7 @@
 </ul>
 <s:if test="%{project != null}">
 <h2>${project.name}</h2>
-<table>
+<table class="overview">
 	<thead>
 		<tr><th>Start</th><th>End</th><th>Description</th><th>Time spent</th></tr>
 	</thead>
@@ -32,10 +33,10 @@
 	<td><%= view.displayDate(hour.start) %></td>
 	<td><%= view.displayDate(hour.end) %></td>
 	<td><%= hour.description%></td>
-	<td><%= view.displayTimeDiff(hour.start, hour.end) %></td>
+	<td class="spent"><%= view.displayTimeDiff(hour.start, hour.end) %></td>
 </tr>
 </s:iterator>
-	<tr><th colspan="3">Total time spent</th><th><%= view.displayTimeDiff(timeSpent) %></th></tr>
+	<tr><th colspan="3">Total time spent</th><th class="spent"><%= view.displayTimeDiff(timeSpent) %></th></tr>
 	</tbody>
 </table>
 </s:if>
