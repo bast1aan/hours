@@ -64,16 +64,10 @@ public class OverviewAction extends ActionSupport implements ServletRequestAware
 	
 	private HttpServletRequest request;
 	
-	@Getter private View view;
 	@Getter private Project project;
 	@Getter private List<Project> projects = Collections.emptyList();
 	@Getter private List<Hour> hours = Collections.emptyList();
 
-	public OverviewAction() {
-		super();
-		view = new View();
-	}
-	
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
