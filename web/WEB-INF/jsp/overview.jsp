@@ -23,9 +23,11 @@
 		<tr><th>Start</th><th>End</th><th>Description</th><th>Time spent</th></tr>
 	</thead>
 	<tbody>
+<% long timeSpent = 0L; %>
 <s:iterator var="hour" value="hours">
 <s:set var="hour" value="%{hour}" />
 <jsp:useBean id="hour" class="bast1aan.hours.Hour" />
+<% timeSpent += view.timeDiffToLong(hour.start, hour.end); %>
 <tr>
 	<td><%= view.displayDate(hour.start) %></td>
 	<td><%= view.displayDate(hour.end) %></td>
@@ -33,6 +35,7 @@
 	<td><%= view.displayTimeDiff(hour.start, hour.end) %></td>
 </tr>
 </s:iterator>
+	<tr><th colspan="3">Total time spent</th><th><%= view.displayTimeDiff(timeSpent) %></th></tr>
 	</tbody>
 </table>
 </s:if>

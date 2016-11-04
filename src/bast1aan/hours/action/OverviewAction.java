@@ -73,6 +73,11 @@ public class OverviewAction extends ActionSupport implements ServletRequestAware
 			if (date == null) return "";
 			return dateFormatter.format(date);
 		}
+		
+		public long timeDiffToLong(Date start, Date end) {
+			if (start == null || end == null) return 0L;
+			return end.getTime() - start.getTime();
+		}
 	}
 	
 	private HttpServletRequest request;
