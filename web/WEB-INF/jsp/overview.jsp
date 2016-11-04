@@ -10,6 +10,7 @@
 	<link href="css/hours.css" rel="stylesheet" />
 </head>
 <body>
+<div id="loginbar">Logged in as: ${user.username} <a href="logout.action">Logout</a> | <a href="hours.html">Main</a> | <a href="projects.html">Manage projects…</a> | <a href="overview.action">Overview of spent hours</a></div>
 <h1>Overview</h1>
 <h2>Projects</h2>
 <ul>
