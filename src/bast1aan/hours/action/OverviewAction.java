@@ -30,10 +30,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import java.text.SimpleDateFormat;
 
 public class OverviewAction extends ActionSupport implements ServletRequestAware {	
 
 	public static class View {
+		
+		private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 		/**
 		 * String representation of time delta
 		 * @param miliseconds
@@ -63,6 +67,11 @@ public class OverviewAction extends ActionSupport implements ServletRequestAware
 		public String displayTimeDiff(Date start, Date end) {
 			if (start == null || end == null) return "";
 			return displayTimeDiff(end.getTime() - start.getTime());
+		}
+		
+		public String displayDate(Date date) {
+			if (date == null) return "";
+			return dateFormatter.format(date);
 		}
 	}
 	

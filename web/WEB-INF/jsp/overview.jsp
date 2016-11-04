@@ -17,7 +17,6 @@
 </s:iterator>
 </ul>
 <s:if test="%{project != null}">
-<% java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); %>
 <h2>${project.name}</h2>
 <table>
 	<thead>
@@ -28,8 +27,8 @@
 <s:set var="hour" value="%{hour}" />
 <jsp:useBean id="hour" class="bast1aan.hours.Hour" />
 <tr>
-	<td><%= hour.start != null ? df.format(hour.start) : "" %></td>
-	<td><%= hour.end != null ? df.format(hour.end) : "" %></td>
+	<td><%= view.displayDate(hour.start) %></td>
+	<td><%= view.displayDate(hour.end) %></td>
 	<td><%= hour.description%></td>
 	<td><%= view.displayTimeDiff(hour.start, hour.end) %></td>
 </tr>
