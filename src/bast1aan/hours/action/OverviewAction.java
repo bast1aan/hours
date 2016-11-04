@@ -1,0 +1,71 @@
+/*
+ * Hours
+ * Copyright (C) 2016 Bastiaan Welmers, bastiaan@welmers.net
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * version 2 along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
+
+package bast1aan.hours.action;
+
+import bast1aan.hours.AuthUser;
+import bast1aan.hours.Dao;
+import bast1aan.hours.Hour;
+import bast1aan.hours.Project;
+import bast1aan.hours.SessionContainer;
+import com.opensymphony.xwork2.ActionSupport;
+import java.util.Collections;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import lombok.Getter;
+import org.apache.struts2.interceptor.ServletRequestAware;
+
+public class OverviewAction extends ActionSupport implements ServletRequestAware {	
+
+	private HttpServletRequest request;
+	
+	@Getter private Project project;
+	@Getter private List<Project> projects = Collections.emptyList();
+	@Getter private List<Hour> hours = Collections.emptyList();
+	
+	@Override
+	public void setServletRequest(HttpServletRequest request) {
+		this.request = request;
+	}
+	
+	public String execute() throws Exception {
+		// TODO similar code already exists in json.BaseController
+		AuthUser authUser = SessionContainer.getUser(request.getSession());
+		if (authUser == null) {
+			return LOGIN;
+		}
+		
+		Dao dao = Dao.getInstance();
+		projects = dao.getProjects(authUser);
+		
+		String projectIdStr = request.getParameter("project_id");
+		if (projectIdStr != null) {
+			int projectId = Integer.parseInt(projectIdStr);
+			for(Project prj : projects) {
+				if (prj.id == projectId) {
+					project = prj;
+					hours = dao.getHoursByProject(project);
+					break;
+				} 
+			}
+		}
+		return SUCCESS;
+	}
+	
+	
+}
