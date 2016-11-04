@@ -21,7 +21,7 @@
 <h2>${project.name}</h2>
 <table>
 	<thead>
-		<tr><th>Start</th><th>End</th><th>Description</th><th>Time spend</th></tr>
+		<tr><th>Start</th><th>End</th><th>Description</th><th>Time spent</th></tr>
 	</thead>
 	<tbody>
 <s:iterator var="hour" value="hours">

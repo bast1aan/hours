@@ -46,10 +46,14 @@ public class OverviewAction extends ActionSupport implements ServletRequestAware
 			long secondsRemain = seconds % 60;
 			long hours = minutes / 60;
 			long minutesRemain = minutes % 60;
-			result.append(Long.toString(hours));
-			result.append('h');
-			result.append(Long.toString(minutesRemain));
-			result.append("min");
+			if (hours > 0) {
+				result.append(Long.toString(hours));
+				result.append('h');
+			}
+			if (minutesRemain > 0) {
+				result.append(Long.toString(minutesRemain));
+				result.append("min");
+			}
 			result.append(Long.toString(secondsRemain));
 			result.append("sec");
 			return result.toString();
