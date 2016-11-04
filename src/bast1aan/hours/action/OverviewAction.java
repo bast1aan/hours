@@ -34,6 +34,10 @@ import java.text.SimpleDateFormat;
 
 public class OverviewAction extends ActionSupport implements ServletRequestAware {	
 
+	/**
+	 * View Helper class for the JSP page.
+	 * Methods should be null-proof and always return non-null values.
+	 */
 	public static class View {
 		
 		private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
