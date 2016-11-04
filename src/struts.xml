@@ -53,6 +53,10 @@
 			<result name="success">/WEB-INF/jsp/logout.jsp</result>
 			<result name="error">/WEB-INF/jsp/logout.jsp</result>
 		</action>
+		<action name="overview" class="bast1aan.hours.action.OverviewAction" method="execute">
+			<result name="success">/WEB-INF/jsp/overview.jsp</result>
+			<result name="login" type="redirect"><param name="location">login.jsp</param></result>
+		</action>
 	</package>
 	<package name="hours-json" extends="json-default">
 		<global-results>

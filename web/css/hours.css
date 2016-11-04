@@ -69,3 +69,16 @@ span.error {
 li.start_project {
 	cursor: pointer;
 }
+
+table.overview {
+	border-collapse: collapse;
+}
+
+table.overview, table.overview th, table.overview td {
+	border: 1px solid #666;
+	padding: 2px 3px;
+}
+
+table.overview th.spent, table.overview td.spent {
+	text-align: right;
+}
