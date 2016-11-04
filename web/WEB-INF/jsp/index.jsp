@@ -16,9 +16,12 @@
 	<script src="js/backbone.js"></script>
 	<script src="js/hours.js"></script>
 	<script type="text/javascript">
-		document.cookie = 'hours_username=${user.username}; path=/';
-		document.cookie = 'hours_fullname=${user.fullname}; path=/';
-		document.cookie = 'hours_base_url=${baseUrl}; path=/';
+		var secure = '';
+		if (document.location.href.substr(0, 5) == 'https')
+			secure = '; secure';
+		document.cookie = 'hours_username=${user.username}; path=/' + secure;
+		document.cookie = 'hours_fullname=${user.fullname}; path=/' + secure;
+		document.cookie = 'hours_base_url=${baseUrl}; path=/' + secure;
 		location.href = 'hours.html';
 	</script>
 </body>
