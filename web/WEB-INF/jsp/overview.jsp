@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<s:set var="view" value="%{view}" />
+<jsp:useBean id="view" class="bast1aan.hours.action.OverviewAction$View" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -20,7 +22,7 @@
 <h2>${project.name}</h2>
 <table>
 	<thead>
-		<tr><th>Start</th><th>End</th><th>Description</th></tr>
+		<tr><th>Start</th><th>End</th><th>Description</th><th>Time spend</th></tr>
 	</thead>
 	<tbody>
 <s:iterator var="hour" value="hours">
@@ -30,6 +32,7 @@
 	<td><%= hour.start != null ? df.format(hour.start) : "" %></td>
 	<td><%= hour.end != null ? df.format(hour.end) : "" %></td>
 	<td><%= hour.description%></td>
+	<td><%= view.displayTimeDiff(hour.start, hour.end) %></td>
 </tr>
 </s:iterator>
 	</tbody>

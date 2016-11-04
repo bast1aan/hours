@@ -25,6 +25,7 @@ import bast1aan.hours.Project;
 import bast1aan.hours.SessionContainer;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
@@ -32,11 +33,46 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 public class OverviewAction extends ActionSupport implements ServletRequestAware {	
 
+	public static class View {
+		/**
+		 * String representation of time delta
+		 * @param miliseconds
+		 * @return 
+		 */
+		public String displayTimeDiff(long miliseconds) {
+			StringBuilder result = new StringBuilder();
+			long seconds = Math.round((double) miliseconds / 1000.0);
+			long minutes = seconds / 60;
+			long secondsRemain = seconds % 60;
+			long hours = minutes / 60;
+			long minutesRemain = minutes % 60;
+			result.append(Long.toString(hours));
+			result.append('h');
+			result.append(Long.toString(minutesRemain));
+			result.append("min");
+			result.append(Long.toString(secondsRemain));
+			result.append("sec");
+			return result.toString();
+			
+		}
+		
+		public String displayTimeDiff(Date start, Date end) {
+			if (start == null || end == null) return "";
+			return displayTimeDiff(end.getTime() - start.getTime());
+		}
+	}
+	
 	private HttpServletRequest request;
 	
+	@Getter private View view;
 	@Getter private Project project;
 	@Getter private List<Project> projects = Collections.emptyList();
 	@Getter private List<Hour> hours = Collections.emptyList();
+
+	public OverviewAction() {
+		super();
+		view = new View();
+	}
 	
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
