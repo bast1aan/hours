@@ -84,7 +84,7 @@
 			<interceptor-ref name="servletConfig" />
 			<interceptor-ref name="json">
 				<param name="includeProperties">
-					project,username
+					project,username,active
 				</param>
 			</interceptor-ref>
 		</action>

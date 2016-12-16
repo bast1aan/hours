@@ -36,6 +36,8 @@ var ProjectListView = Backbone.View.extend({
 		"click .delete" : "deleteProject",
 		"dblclick .name" : "editName",
 		"click .add" : "addProject",
+		"click .enable" : "enableProject",
+		"click .disable" : "disableProject",
 	},
 	deleteProject : function(e) {
 		var projectId = $(e.currentTarget).data('id');
@@ -106,7 +108,18 @@ var ProjectListView = Backbone.View.extend({
 			}
 		}
 
-	}
+	},
+	enableProject : function(e) {
+		var projectId = $(e.currentTarget).data('id');
+		var project = this.collection.get(projectId);
+		enableProject(project, this);
+	},
+	disableProject : function(e) {
+		var projectId = $(e.currentTarget).data('id');
+		var project = this.collection.get(projectId);
+		disableProject(project, this);
+	},
+
 });
 
 var listView = new ProjectListView({collection: projects});
