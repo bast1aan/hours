@@ -14,7 +14,10 @@
 </ul>
 <h2 class="other-projects">Tap a project to start with</h2>
 <ul class="other-projects" id="other-projects">
-<% projects.getOther().each(function(project) { %>
+<% projects.getOther().each(function(project) {
+	if (!project.get('active'))
+		return;
+	%>
 	<li class="start_project" data-id="<%= project.get('id') %>" id="other_project<%= project.get('id') %>">
 		<h3><%= project.get('name') %></h3>
 	</li>
