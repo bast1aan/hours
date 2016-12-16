@@ -86,7 +86,10 @@ public class ProjectController extends BaseController {
 			error = "No access to this project";
 			return LOGIN;
 		}
-		dbProject.name = project.name;
+		if (project.name != null)
+			dbProject.name = project.name;
+		if (project.active != null)
+			dbProject.active = project.active;
 		
 		dao.update(dbProject);
 		

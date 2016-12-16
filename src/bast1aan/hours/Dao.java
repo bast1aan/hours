@@ -194,6 +194,8 @@ public class Dao {
 	}
 	
 	public void addProject(Project project) {
+		if (project.active == null)
+			project.active = true; // default value in db
 		final String query = "INSERT INTO projects (project_name, username, is_active) VALUES (?, ?, ?)";
 		try {
 			String username = project.username;
