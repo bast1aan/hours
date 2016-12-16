@@ -26,5 +26,5 @@ public class Project {
 	@Getter @Setter public String name;
 	@Getter @Setter public String username;
 	@Getter @Setter public User user;
-	@Getter @Setter public boolean isActive = true;
+	@Getter @Setter public boolean active = true;
 }

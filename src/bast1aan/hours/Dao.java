@@ -206,7 +206,7 @@ public class Dao {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, project.name);
 			stmt.setString(2, username);
-			stmt.setBoolean(3, project.isActive);
+			stmt.setBoolean(3, project.active);
 			int affected = stmt.executeUpdate();
 			
 			if (affected != 0) {
@@ -230,7 +230,7 @@ public class Dao {
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, project.name);
-			stmt.setBoolean(2, project.isActive);
+			stmt.setBoolean(2, project.active);
 			stmt.setInt(3, project.id);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -383,7 +383,7 @@ public class Dao {
 		project.id = result.getInt("project_id");
 		project.name = result.getString("project_name");
 		project.username = result.getString("username");
-		project.isActive = result.getBoolean("is_active");
+		project.active = result.getBoolean("is_active");
 	}
 	
 	private void populate(Hour hour, ResultSet result) throws SQLException {
