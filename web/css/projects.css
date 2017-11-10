@@ -1,0 +1,11 @@
+.projectlist .name {
+	float: left;
+	width: 150px;
+}
+
+ul.projectlist li {
+	border-bottom: 1px #eee solid;
+	display: block;
+	padding-bottom: 4px;
+	margin-top: 4px;
+}
