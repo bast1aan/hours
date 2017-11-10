@@ -4,7 +4,13 @@
 <ul class="projectlist">
 <% projects.each(function(project) { %>
 	<li id="project<%= project.get('id') %>">
-		<strong class="name" data-id="<%= project.get('id') %>"><%= project.get('name') %></strong> <button class="delete" data-id="<%= project.get('id') %>">Delete</button>
+		<strong class="name" data-id="<%= project.get('id') %>"><%= project.get('name') %></strong>
+		<button class="delete" data-id="<%= project.get('id') %>">Delete</button>
+<% if (project.get('active')) { %>
+		<button class="disable" data-id="<%= project.get('id') %>">Disable</button>
+<% } else { %>
+		<button class="enable" data-id="<%= project.get('id') %>">Enable</button>
+<% } %>
 	</li>
 <% }); %>
 </ul>

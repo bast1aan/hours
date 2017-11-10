@@ -158,6 +158,34 @@ function renameProject(id, name, view) {
 	});
 }
 
+function enableProject(project, view) {
+	doRequest({
+		url : "/projects/update?username=" + username,
+		type : 'PUT',
+		data : { username : username, project : { id : project.get('id'), name : project.get('name'), active: true } },
+		success : function() {
+			if (view) {
+				view.collection.get(project.get('id')).set('active', true);
+				view.render();
+			}
+		}
+	});
+}
+
+function disableProject(project, view) {
+	doRequest({
+		url : "/projects/update?username=" + username,
+		type : 'PUT',
+		data : { username : username, project : { id : project.get('id'), name : project.get('name'), active: false } },
+		success : function() {
+			if (view) {
+				view.collection.get(project.get('id')).set('active', false);
+				view.render();
+			}
+		}
+	});
+}
+
 function newProject(name, view) {
 	doRequest({
 		url : "/projects/save?username=" + username,

@@ -194,7 +194,9 @@ public class Dao {
 	}
 	
 	public void addProject(Project project) {
-		final String query = "INSERT INTO projects (project_name, username) VALUES (?, ?)";
+		if (project.active == null)
+			project.active = true; // default value in db
+		final String query = "INSERT INTO projects (project_name, username, is_active) VALUES (?, ?, ?)";
 		try {
 			String username = project.username;
 			if (username == null || username.length() == 0) {
@@ -206,7 +208,7 @@ public class Dao {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, project.name);
 			stmt.setString(2, username);
-			
+			stmt.setBoolean(3, project.active);
 			int affected = stmt.executeUpdate();
 			
 			if (affected != 0) {
@@ -226,11 +228,12 @@ public class Dao {
 		if (project.id <= 0) {
 			throw new HoursException("id must be set");
 		}
-		final String query = "UPDATE projects SET project_name = ? WHERE project_id = ?";
+		final String query = "UPDATE projects SET project_name = ?, is_active = ? WHERE project_id = ?";
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, project.name);
-			stmt.setInt(2, project.id);
+			stmt.setBoolean(2, project.active);
+			stmt.setInt(3, project.id);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new HoursException("Error executing query", e);
@@ -382,6 +385,7 @@ public class Dao {
 		project.id = result.getInt("project_id");
 		project.name = result.getString("project_name");
 		project.username = result.getString("username");
+		project.active = result.getBoolean("is_active");
 	}
 	
 	private void populate(Hour hour, ResultSet result) throws SQLException {
