@@ -48,9 +48,14 @@ var MainView = Backbone.View.extend({
 				hour: hour,
 				project: project,
 				submit: function(onSuccess) {
-					newHour(this.hour, onSuccess);
-					project.get('hours').add(this.hour);
-					view.render();
+					var thisHour = this.hour
+					newHour(thisHour, function() {
+						project.get('hours').add(thisHour);
+						view.render();
+						if (onSuccess) {
+							onSuccess();
+						}
+					});
 				}
 			};
 			var dialog = new DialogProjectStartView({model: model});
