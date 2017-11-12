@@ -47,10 +47,15 @@ var MainView = Backbone.View.extend({
 			var model = {
 				hour: hour,
 				project: project,
-				submit: function() {
-					newHour(this.hour);
-					project.get('hours').add(this.hour);
-					view.render();
+				submit: function(onSuccess) {
+					var thisHour = this.hour
+					newHour(thisHour, function() {
+						project.get('hours').add(thisHour);
+						view.render();
+						if (onSuccess) {
+							onSuccess();
+						}
+					});
 				}
 			};
 			var dialog = new DialogProjectStartView({model: model});
@@ -69,10 +74,13 @@ var MainView = Backbone.View.extend({
 			var model = {
 				hour: hourClone,
 				project: project,
-				submit: function() {
+				submit: function(onSuccess) {
 					updateHour(this.hour, function() {
 						hour.set(hourClone.attributes);
 						view.render();
+						if (onSuccess) {
+							onSuccess()
+						}
 					});
 				}
 			};
@@ -133,9 +141,11 @@ var DialogProjectStartView = Backbone.View.extend({
 		}
 		this.model.hour.set('description', $descriptionElement.val());
 		this.model.hour.set('start', startDate);
-		this.model.submit();
-		this.$el.dialog("close");
-		this.$el.remove();
+		var $el = this.$el;
+		this.model.submit(/* on success */ function() {
+			$el.dialog("close");
+			$el.remove();
+		});
 		return false;
 
 	}
@@ -184,9 +194,11 @@ var DialogProjectEndView = Backbone.View.extend({
 		this.model.hour.set('description', $descriptionElement.val());
 		this.model.hour.set('start', startDate);
 		this.model.hour.set('end', endDate);
-		this.model.submit();
-		this.$el.dialog("close");
-		this.$el.remove();
+		var $el = this.$el;
+		this.model.submit(/* on success */ function() {
+			$el.dialog("close");
+			$el.remove();
+		});
 		return false;
 	}
 
