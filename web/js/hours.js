@@ -184,7 +184,7 @@ function getHours(project) {
 	});
 }
 
-function newHour(hour) {
+function newHour(hour, success) {
 	doRequest({
 		url : "/hours/create?username=" + username + "&projectId=" + hour.get('projectId'),
 		type : 'POST',
@@ -192,6 +192,8 @@ function newHour(hour) {
 		success : function(data) {
 			if (data.hour) {
 				hour.set(data.hour);
+				if (typeof success == 'function')
+					success();
 			}
 		}
 	});
