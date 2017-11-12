@@ -79,7 +79,7 @@ var MainView = Backbone.View.extend({
 						hour.set(hourClone.attributes);
 						view.render();
 						if (onSuccess) {
-							onSuccess()
+							onSuccess();
 						}
 					});
 				}
@@ -121,7 +121,7 @@ var DialogProjectStartView = Backbone.View.extend({
 					},
 					Cancel: function () {
 						$(this).dialog("close");
-						view.remove()
+						view.remove();
 					}
 				}
 			});
@@ -167,7 +167,7 @@ var DialogProjectEndView = Backbone.View.extend({
 					},
 					Cancel: function () {
 						$(this).dialog("close");
-						view.remove()
+						view.remove();
 					}
 				}
 			});
