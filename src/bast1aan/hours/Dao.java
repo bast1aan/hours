@@ -313,8 +313,8 @@ public class Dao {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, hour.description);
 			stmt.setInt(2, projectId);
-			stmt.setTimestamp(3, hour.start != null ? new java.sql.Timestamp(hour.start.getTime()) : null);
-			stmt.setTimestamp(4, hour.end != null ? new java.sql.Timestamp(hour.end.getTime()) : null);
+			stmt.setTimestamp(3, getSqlTimestamp(hour.start));
+			stmt.setTimestamp(4, getSqlTimestamp(hour.end));
 			
 			int affected = stmt.executeUpdate();
 			
@@ -340,7 +340,7 @@ public class Dao {
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, hour.description);
-			stmt.setTimestamp(2, hour.end != null ? new java.sql.Timestamp(hour.end.getTime()) : null);
+			stmt.setTimestamp(2, getSqlTimestamp(hour.end));
 			stmt.setInt(3, hour.id);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -394,6 +394,12 @@ public class Dao {
 		hour.projectId = result.getInt("project_id");
 		hour.start = result.getTimestamp("start");
 		hour.end = result.getTimestamp("end");
+	}
+
+	private java.sql.Timestamp getSqlTimestamp(java.util.Date date) {
+		if (date == null)
+			return null;
+		return new java.sql.Timestamp(date.getTime());
 	}
 
 }
