@@ -336,12 +336,13 @@ public class Dao {
 		if (hour.id <= 0) {
 			throw new HoursException("id must be set");
 		}
-		final String query = "UPDATE hours SET description = ?, \"end\" = ? WHERE hour_id = ?";
+		final String query = "UPDATE hours SET description = ?, start = ?, \"end\" = ? WHERE hour_id = ?";
 		try {
 			PreparedStatement stmt = cm.getConnection().prepareStatement(query);
 			stmt.setString(1, hour.description);
-			stmt.setTimestamp(2, getSqlTimestamp(hour.end));
-			stmt.setInt(3, hour.id);
+			stmt.setTimestamp(2, getSqlTimestamp(hour.start));
+			stmt.setTimestamp(3, getSqlTimestamp(hour.end));
+			stmt.setInt(4, hour.id);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new HoursException("Error executing query", e);
