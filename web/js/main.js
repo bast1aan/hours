@@ -187,7 +187,7 @@ var DialogProjectEndView = Backbone.View.extend({
 			return false;
 		}
 		var endDate = parseStrToDate($endElement.val());
-		if (!startDate) {
+		if (!endDate) {
 			alert('Invalid end timestamp given');
 			return false;
 		}
