@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<s:set var="view" value="%{view}" />
 <jsp:useBean id="view" class="bast1aan.hours.action.OverviewAction$View" />
 <!DOCTYPE html>
 <html>
@@ -10,12 +11,25 @@
 	<link href="css/hours.css" rel="stylesheet" />
 </head>
 <body>
+<script src="js/jquery.js"></script>
+	<script type="text/javascript">
+var timeZone = '';
+try {
+	timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+} catch (e) {}
+function addTimezoneToHref() {
+	this.href += "&timeZone=" + timeZone;
+}
+$(document).ready(function(){
+	$('a.overview').each(addTimezoneToHref);
+});
+</script>
 <div id="loginbar">Logged in as: ${user.username} <a href="logout.action">Logout</a> | <a href="hours.html">Main</a> | <a href="projects.html">Manage projects…</a> | <a href="overview.action">Overview of spent hours</a></div>
 <h1>Overview</h1>
 <h2>Projects</h2>
 <ul>
 <s:iterator var="prj" value="projects">
-<li><a href="overview.action?project_id=${prj.id}">${prj.name}</a></li>
+<li><a class="overview" href="overview.action?project_id=${prj.id}">${prj.name}</a></li>
 </s:iterator>
 </ul>
 <s:if test="%{project != null}">

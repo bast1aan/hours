@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class OverviewAction extends ActionSupport implements ServletRequestAware {	
 
@@ -40,7 +41,15 @@ public class OverviewAction extends ActionSupport implements ServletRequestAware
 	 */
 	public static class View {
 		
-		private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		private SimpleDateFormat dateFormatter;
+		
+		public View() {
+			dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		}
+		
+		public void setTimeZone(TimeZone tz) {
+			dateFormatter.setTimeZone(tz);
+		}
 		
 		/**
 		 * String representation of time delta
@@ -89,13 +98,16 @@ public class OverviewAction extends ActionSupport implements ServletRequestAware
 	@Getter private Project project;
 	@Getter private List<Project> projects = Collections.emptyList();
 	@Getter private List<Hour> hours = Collections.emptyList();
-
+	@Getter private View view;
+	
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
 	
 	public String execute() throws Exception {
+		view = new View(); // view helper
+		
 		// TODO similar code already exists in json.BaseController
 		AuthUser authUser = SessionContainer.getUser(request.getSession());
 		if (authUser == null) {
@@ -104,6 +116,15 @@ public class OverviewAction extends ActionSupport implements ServletRequestAware
 		
 		Dao dao = Dao.getInstance();
 		projects = dao.getProjects(authUser);
+		
+		String timeZoneStr = request.getParameter("timeZone");
+		TimeZone timeZone;
+		if (timeZoneStr == null || timeZoneStr.trim().equals("")) {
+			timeZone = TimeZone.getDefault();
+		} else {
+			timeZone = TimeZone.getTimeZone(timeZoneStr);
+		}
+		view.setTimeZone(timeZone);
 		
 		String projectIdStr = request.getParameter("project_id");
 		if (projectIdStr != null) {
